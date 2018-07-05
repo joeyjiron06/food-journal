@@ -55,6 +55,7 @@ class App extends Component {
             <AuthenticatedRoute path="/home" component={HomePage} />
             <AuthenticatedRoute path="/statistics" component={StatisticsPage} />
             <AuthenticatedRoute path="/settings" component={SettingsPage} />
+            {/* no match just redirect to login page */}
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
