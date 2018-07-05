@@ -29,20 +29,18 @@ class EditMeal extends Component {
 
   componentWillMount() {
     // copy the passed in meal for editing, or create a new one
-    this.state.meal = { ...this.props.meal } || {};
+    this.state.meal = { id: Date.now(), ...this.props.meal };
+    this.state.isEditing = !!this.props.meal;
   }
 
   handleTitleChanged = event => {
     const title = event.target.value;
     const meal = { ...this.state.meal, title };
-    console.log("meal", meal);
     this.setState({ meal });
   };
   handleMealTypeChanged = event => {
     const type = event.target.value;
     const meal = { ...this.state.meal, type };
-    console.log("meal", meal);
-
     this.setState({ meal });
   };
   handleQuantityChanged = event => {
@@ -52,13 +50,12 @@ class EditMeal extends Component {
   };
 
   render() {
-    const { onAdd, onCancel } = this.props;
-    const { meal } = this.state;
+    const { onConfirm, onCancel } = this.props;
+    const { meal, isEditing } = this.state;
     const addButtonEnabled = !!meal.type && !!meal.title;
-    console.log("addButtonEnabled", addButtonEnabled, meal);
     return (
       <Dialog open={true}>
-        <DialogTitle>Add Meal</DialogTitle>
+        <DialogTitle>{isEditing ? "Edit Meal" : "Add Meal"}</DialogTitle>
 
         <DialogContent>
           <div>
@@ -83,9 +80,10 @@ class EditMeal extends Component {
                 onChange={this.handleMealTypeChanged}
                 input={<Input name="Meal Type" id="edit-meal-type" />}
               >
-                <MenuItem value={"junk"}>Junk</MenuItem>
-                <MenuItem value={"vegetarian"}>Vegetarian</MenuItem>
+                <MenuItem value={"junk food"}>Junk food</MenuItem>
+                <MenuItem value={"meat"}>Meat</MenuItem>
                 <MenuItem value={"vegan"}>Vegan</MenuItem>
+                <MenuItem value={"vegetarian"}>Vegetarian</MenuItem>
               </Select>
 
               <FormHelperText>required</FormHelperText>
@@ -110,11 +108,11 @@ class EditMeal extends Component {
             <Button
               color="primary"
               onClick={() => {
-                onAdd(meal);
+                onConfirm(meal);
               }}
               disabled={!addButtonEnabled}
             >
-              Add
+              {isEditing ? "Confirm" : "Add"}
             </Button>
           </DialogActions>
         </DialogContent>

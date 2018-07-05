@@ -17,39 +17,72 @@ import {
 } from "@material-ui/core";
 import EditMeal from "../../components/editMeal";
 
-const meals = [
-  {
-    id: 0,
-    title: "Oatmeal",
-    type: "vegan"
-  },
-  {
-    id: 1,
-    title: "PB&J",
-    type: "vegan"
-  },
-  {
-    id: 2,
-    title: "Soda",
-    type: "junk"
-  },
-  {
-    id: 3,
-    title: "2 Beers",
-    type: "alcohol"
-  }
-];
-
 class Home extends Component {
+  state = {
+    showAddModal: false,
+    meals: [
+      {
+        id: 0,
+        title: "Oatmeal",
+        type: "vegan"
+      },
+      {
+        id: 1,
+        title: "PB&J",
+        type: "vegan"
+      },
+      {
+        id: 2,
+        title: "Soda",
+        type: "junk"
+      },
+      {
+        id: 3,
+        title: "2 Beers",
+        type: "alcohol"
+      },
+      {
+        id: 4,
+        title: "Oatmeal",
+        type: "vegan"
+      },
+      {
+        id: 5,
+        title: "PB&J",
+        type: "vegan"
+      },
+      {
+        id: 6,
+        title: "Soda",
+        type: "junk"
+      },
+      {
+        id: 7,
+        title: "2 Beers",
+        type: "alcohol"
+      }
+    ]
+  };
   componentWillMount() {}
 
   componentWillUnmount() {}
 
   handleAddMealClicked = () => {
-    console.log("add meal clicked");
+    this.setState({ showAddModal: true });
+  };
+
+  handleCloseModal = () => {
+    this.setState({ showAddModal: false });
+  };
+
+  handleMealAdded = meal => {
+    const meals = [...this.state.meals, meal];
+    this.setState({ meals, showAddModal: false });
   };
 
   render() {
+    const { meals, showAddModal } = this.state;
+
     return (
       <div className="home-page">
         <AppBar position="static">
@@ -75,8 +108,11 @@ class Home extends Component {
           </List>
         </div>
 
-        <Modal open={true}>
-          <EditMeal />
+        <Modal open={showAddModal}>
+          <EditMeal
+            onConfirm={this.handleMealAdded}
+            onCancel={this.handleCloseModal}
+          />
         </Modal>
 
         <div className="home-page-add-button-container">
