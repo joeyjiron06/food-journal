@@ -13,12 +13,12 @@ export function removeMeal(meal) {
     .remove();
 }
 
-export function fetchMeals(startTime, endTime) {
+export function fetchMeals({ start, end }) {
   return firebase.user.db
     .child('meals')
     .orderByChild('date')
-    .startAt(startTime)
-    .endAt(endTime)
+    .startAt(start)
+    .endAt(end)
     .once('value')
     .then(snapshot => {
       const meals = [];

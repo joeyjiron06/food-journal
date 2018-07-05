@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import EditMeal from '../../components/editMeal';
 import { addMeal, removeMeal, fetchMeals } from '../../model/meal';
+import { dateRangeOfToday } from '../../model/date';
 
 class Home extends Component {
   state = {
@@ -24,34 +25,28 @@ class Home extends Component {
     meals: null
   };
   componentWillMount() {
-    const now = new Date();
-    const startOfToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    ).getTime();
-    const endOfToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      23,
-      59,
-      59,
-      9
-    ).getTime();
-    fetchMeals(startOfToday, endOfToday)
+    this.mounted = true;
+    fetchMeals(dateRangeOfToday())
       .then(meals => {
+        if (!this.mounted) {
+          return;
+        }
         console.log('got meals', meals);
         this.setState({
           meals
         });
       })
       .catch(error => {
+        if (!this.mounted) {
+          return;
+        }
         console.error('error fetching meals', error);
       });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.mounted = true;
+  }
 
   handleAddMealClicked = () => {
     this.setState({ showAddModal: true });

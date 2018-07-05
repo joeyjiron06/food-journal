@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
 import { Typography, Tabs, Tab } from '@material-ui/core';
+import { fetchMeals } from '../../model/meal';
+import {
+  dateRangeOfToday,
+  dateRangeOfWeek,
+  dateRangeOfMonth,
+  dateRangeOfYear
+} from '../../model/date';
+
 import './index.css';
 
 const calculateStats = meals => {
+  meals = meals || [];
+
   let meat = 0;
   let vegetarian = 0;
   let vegan = 0;
@@ -12,7 +22,7 @@ const calculateStats = meals => {
     if (meal.type === 'meat') meat++;
     if (meal.type === 'vegetarian') vegetarian++;
     if (meal.type === 'vegan') vegan++;
-    if (meal.type === 'junk food') junkFood++;
+    if (meal.type === 'junk') junkFood++;
   });
 
   return {
@@ -22,93 +32,6 @@ const calculateStats = meals => {
     junkFood: (junkFood * 100) / meals.length
   };
 };
-
-let id = 0;
-const meals = [
-  {
-    id: id++,
-    title: 'Oatmeal',
-    type: 'vegetarian'
-  },
-  {
-    id: id++,
-    title: 'PB&J',
-    type: 'vegan'
-  },
-  {
-    id: id++,
-    title: 'Soda',
-    type: 'junk food'
-  },
-  {
-    id: id++,
-    title: '2 Beers',
-    type: 'junk food'
-  },
-  {
-    id: id++,
-    title: 'Oatmeal',
-    type: 'vegan'
-  },
-  {
-    id: id++,
-    title: 'PB&J',
-    type: 'vegan'
-  },
-  {
-    id: id++,
-    title: 'Soda',
-    type: 'junk'
-  },
-  {
-    id: id++,
-    title: '2 Beers',
-    type: 'meat'
-  }
-];
-const weekmeals = [
-  ...meals,
-  {
-    id: id++,
-    title: 'Oatmeal',
-    type: 'vegan'
-  },
-  {
-    id: id++,
-    title: 'PB&J',
-    type: 'junk food'
-  },
-  {
-    id: id++,
-    title: 'Soda',
-    type: 'junk food'
-  },
-  {
-    id: id++,
-    title: '2 Beers',
-    type: 'junk food'
-  },
-  {
-    id: id++,
-    title: 'Oatmeal',
-    type: 'junk food'
-  },
-  {
-    id: id++,
-    title: 'PB&J',
-    type: 'meat'
-  },
-  {
-    id: id++,
-    title: 'Soda',
-    type: 'meat'
-  },
-  {
-    id: id++,
-    title: '2 Beers',
-    type: 'meat'
-  }
-];
 
 const Statistic = ({ title, value }) => (
   <div className="stats-page-stat">
@@ -122,10 +45,26 @@ const Statistic = ({ title, value }) => (
       />
     </div>
     <Typography style={{ display: 'inline' }}>
-      {(value || 0).toFixed(1) + '%'}
+      {parseFloat((value || 0).toFixed(1)) + '%'}
     </Typography>
   </div>
 );
+
+function cancellable(promise, callback) {
+  let cancelled = false;
+  promise
+    .then(data => {
+      if (cancelled) return;
+      callback(null, data);
+    })
+    .catch(error => {
+      if (cancelled) return;
+      callback(error, null);
+    });
+  return function cancel() {
+    cancelled = true;
+  };
+}
 
 class StatisticsPage extends Component {
   state = {
@@ -133,25 +72,57 @@ class StatisticsPage extends Component {
     value: 0
   };
 
+  loadMeals(dateRange, cacheKey) {
+    if (this.cancelLoading) {
+      this.cancelLoading();
+      this.cancelLoading = null;
+    }
+
+    let promise;
+
+    if (this[cacheKey]) {
+      promise = Promise.resolve(this[cacheKey]);
+    } else {
+      promise = fetchMeals(dateRange);
+    }
+
+    this.setState({
+      isLoading: true,
+      error: null,
+      meals: null
+    });
+
+    this.cancelLoading = cancellable(promise, (error, meals) => {
+      console.log('got meals', meals);
+      this.setState({
+        error,
+        stats: calculateStats(meals),
+        isLoading: false
+      });
+      this[cacheKey] = meals;
+    });
+  }
+
   handleTabClicked = (event, value) => {
-    let stats = {};
-    console.log('value', value);
     switch (value) {
       case 0:
-        stats = calculateStats(meals);
+        this.loadMeals(dateRangeOfToday(), 'today');
         break;
       case 1:
-        stats = calculateStats(weekmeals);
+        this.loadMeals(dateRangeOfWeek(), 'week');
         break;
       case 2:
+        this.loadMeals(dateRangeOfMonth(), 'month');
         break;
       case 3:
+        this.loadMeals(dateRangeOfYear(), 'year');
         break;
       default:
         console.warn('unhandled value', value);
         break;
     }
-    this.setState({ value, stats });
+
+    this.setState({ value });
   };
 
   componentWillMount() {

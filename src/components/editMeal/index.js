@@ -107,7 +107,7 @@ class EditMeal extends Component {
                 onChange={this.handleMealTypeChanged}
                 input={<Input name="Meal Type" id="edit-meal-type" />}
               >
-                <MenuItem value={'junk food'}>Junk food</MenuItem>
+                <MenuItem value={'junk'}>Junk food</MenuItem>
                 <MenuItem value={'meat'}>Meat</MenuItem>
                 <MenuItem value={'vegan'}>Vegan</MenuItem>
                 <MenuItem value={'vegetarian'}>Vegetarian</MenuItem>
