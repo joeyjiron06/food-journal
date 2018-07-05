@@ -85,15 +85,6 @@ class Home extends Component {
 
     return (
       <div className="home-page">
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton color="inherit" aria-label="Menu">
-              <Icon>menu</Icon>
-            </IconButton>
-            <div>Food Journal</div>
-          </Toolbar>
-        </AppBar>
-
         <div className="home-page-content">
           <Typography variant="display1" gutterBottom>
             Today

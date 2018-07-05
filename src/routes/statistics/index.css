@@ -1,0 +1,27 @@
+.stats-page {
+  padding: 40px 40px;
+}
+.stats-page-stat {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.stats-page-percentage-container {
+  flex-grow: 1;
+}
+
+.stats-page-percentage-bar {
+  background: gray;
+  height: 100%;
+  transition: width 500ms ease-out;
+}
+
+.state-page-state-title {
+  display: inline;
+  min-width: 100px;
+}
+
+.stats-page-chart {
+  max-width: 400px;
+  margin-top: 40px;
+}
