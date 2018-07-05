@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import RaisedButton from "material-ui/RaisedButton";
-import "./index.css";
-import * as firebase from "firebase";
+import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
+import './index.css';
+import * as firebase from 'firebase';
 import {
   AppBar,
   Toolbar,
@@ -14,56 +14,42 @@ import {
   ListItem,
   ListItemText,
   Modal
-} from "@material-ui/core";
-import EditMeal from "../../components/editMeal";
+} from '@material-ui/core';
+import EditMeal from '../../components/editMeal';
+import { addMeal, fetchMeals } from '../../model/meal';
 
 class Home extends Component {
   state = {
     showAddModal: false,
-    meals: [
-      {
-        id: 0,
-        title: "Oatmeal",
-        type: "vegan"
-      },
-      {
-        id: 1,
-        title: "PB&J",
-        type: "vegan"
-      },
-      {
-        id: 2,
-        title: "Soda",
-        type: "junk"
-      },
-      {
-        id: 3,
-        title: "2 Beers",
-        type: "alcohol"
-      },
-      {
-        id: 4,
-        title: "Oatmeal",
-        type: "vegan"
-      },
-      {
-        id: 5,
-        title: "PB&J",
-        type: "vegan"
-      },
-      {
-        id: 6,
-        title: "Soda",
-        type: "junk"
-      },
-      {
-        id: 7,
-        title: "2 Beers",
-        type: "alcohol"
-      }
-    ]
+    meals: null
   };
-  componentWillMount() {}
+  componentWillMount() {
+    const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ).getTime();
+    const endOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      9
+    ).getTime();
+    fetchMeals(startOfToday, endOfToday)
+      .then(meals => {
+        console.log('got meals', meals);
+        this.setState({
+          meals
+        });
+      })
+      .catch(error => {
+        console.error('error fetching meals', error);
+      });
+  }
 
   componentWillUnmount() {}
 
@@ -76,8 +62,10 @@ class Home extends Component {
   };
 
   handleMealAdded = meal => {
-    const meals = [...this.state.meals, meal];
+    const prevMeals = this.state.meals || [];
+    const meals = [...prevMeals, meal];
     this.setState({ meals, showAddModal: false });
+    addMeal(meal);
   };
 
   render() {
@@ -91,11 +79,18 @@ class Home extends Component {
           </Typography>
 
           <List>
-            {meals.map(meal => (
-              <ListItem key={meal.id}>
-                <ListItemText primary={meal.title} secondary={meal.type} />
-              </ListItem>
-            ))}
+            {meals ? (
+              meals.map(meal => (
+                <ListItem key={meal.id}>
+                  <ListItemText primary={meal.title} secondary={meal.type} />
+                </ListItem>
+              ))
+            ) : (
+              <div>
+                You haven't added any meals today. Add some meals by clicking on
+                the button below.
+              </div>
+            )}
           </List>
         </div>
 

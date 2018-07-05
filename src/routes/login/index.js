@@ -9,8 +9,17 @@ class Login extends Component {
       .auth()
       .onAuthStateChanged(user => {
         firebase.user = user;
+        firebase.user.db = firebase.database().ref(user.uid);
         localStorage.setItem('user', JSON.stringify(user));
-        this.props.history.replace('/home');
+
+        const pathname =
+          (this.props.location &&
+            this.props.location.state &&
+            this.props.location.state.from &&
+            this.props.location.state.from.pathname) ||
+          '/home';
+
+        this.props.history.replace(pathname);
       });
   }
 

@@ -1,13 +1,36 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LoginPage from './routes/login';
 import HomePage from './routes/home';
 import StatisticsPage from './routes/statistics';
+import SettingsPage from './routes/settings';
 import AppBar from './components/appBar';
 import * as firebase from 'firebase';
 
 const theme = createMuiTheme({});
+
+class AuthenticatedRoute extends Component {
+  render() {
+    if (!firebase.user) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/',
+            state: { from: this.props.location }
+          }}
+        />
+      );
+    }
+
+    return (
+      <div>
+        <AppBar />
+        <Route {...this.props} />
+      </div>
+    );
+  }
+}
 
 class App extends Component {
   state = {};
@@ -27,12 +50,12 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <BrowserRouter basename={process.env.PUBLIC_URL}>
-          <div>
-            <AppBar />
+          <Switch>
             <Route exact path="/" component={LoginPage} />
-            <Route exact path="/home" component={HomePage} />
-            <Route exact path="/statistics" component={StatisticsPage} />
-          </div>
+            <AuthenticatedRoute path="/home" component={HomePage} />
+            <AuthenticatedRoute path="/statistics" component={StatisticsPage} />
+            <AuthenticatedRoute path="/settings" component={SettingsPage} />
+          </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
     );

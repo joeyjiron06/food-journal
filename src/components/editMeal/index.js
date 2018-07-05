@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -21,15 +21,15 @@ import {
   Input,
   Select,
   MenuItem
-} from "@material-ui/core";
-import "./index.css";
+} from '@material-ui/core';
+import './index.css';
 
 class EditMeal extends Component {
   state = {};
 
   componentWillMount() {
     // copy the passed in meal for editing, or create a new one
-    this.state.meal = { id: Date.now(), ...this.props.meal };
+    this.state.meal = { ...this.props.meal };
     this.state.isEditing = !!this.props.meal;
   }
 
@@ -55,13 +55,13 @@ class EditMeal extends Component {
     const addButtonEnabled = !!meal.type && !!meal.title;
     return (
       <Dialog open={true}>
-        <DialogTitle>{isEditing ? "Edit Meal" : "Add Meal"}</DialogTitle>
+        <DialogTitle>{isEditing ? 'Edit Meal' : 'Add Meal'}</DialogTitle>
 
         <DialogContent>
           <div>
             <TextField
               label="Name of meal"
-              value={meal.title || ""}
+              value={meal.title || ''}
               onChange={this.handleTitleChanged}
               margin="normal"
               helperText="required"
@@ -76,14 +76,14 @@ class EditMeal extends Component {
             >
               <InputLabel htmlFor="edit-meal-type">Meal Type</InputLabel>
               <Select
-                value={meal.type || ""}
+                value={meal.type || ''}
                 onChange={this.handleMealTypeChanged}
                 input={<Input name="Meal Type" id="edit-meal-type" />}
               >
-                <MenuItem value={"junk food"}>Junk food</MenuItem>
-                <MenuItem value={"meat"}>Meat</MenuItem>
-                <MenuItem value={"vegan"}>Vegan</MenuItem>
-                <MenuItem value={"vegetarian"}>Vegetarian</MenuItem>
+                <MenuItem value={'junk food'}>Junk food</MenuItem>
+                <MenuItem value={'meat'}>Meat</MenuItem>
+                <MenuItem value={'vegan'}>Vegan</MenuItem>
+                <MenuItem value={'vegetarian'}>Vegetarian</MenuItem>
               </Select>
 
               <FormHelperText>required</FormHelperText>
@@ -92,7 +92,7 @@ class EditMeal extends Component {
 
           <TextField
             label="Quantity"
-            value={meal.quantity || ""}
+            value={meal.quantity || ''}
             onChange={this.handleQuantityChanged}
             helperText="optional"
             margin="normal"
@@ -112,7 +112,7 @@ class EditMeal extends Component {
               }}
               disabled={!addButtonEnabled}
             >
-              {isEditing ? "Confirm" : "Add"}
+              {isEditing ? 'Confirm' : 'Add'}
             </Button>
           </DialogActions>
         </DialogContent>
