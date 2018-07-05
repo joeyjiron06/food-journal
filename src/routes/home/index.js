@@ -12,8 +12,10 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Modal
 } from "@material-ui/core";
+import EditMeal from "../../components/editMeal";
 
 const meals = [
   {
@@ -43,6 +45,10 @@ class Home extends Component {
 
   componentWillUnmount() {}
 
+  handleAddMealClicked = () => {
+    console.log("add meal clicked");
+  };
+
   render() {
     return (
       <div className="home-page">
@@ -69,8 +75,12 @@ class Home extends Component {
           </List>
         </div>
 
+        <Modal open={true}>
+          <EditMeal />
+        </Modal>
+
         <div className="home-page-add-button-container">
-          <Button variant="extendedFab">
+          <Button variant="extendedFab" onClick={this.handleAddMealClicked}>
             <Icon style={{ marginRight: 10 }}>add</Icon>
             Add Meal
           </Button>
