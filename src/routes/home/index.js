@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
 import './index.css';
-import * as firebase from 'firebase';
 import {
-  AppBar,
-  Toolbar,
   Button,
-  IconButton,
   Icon,
-  Grid,
   Typography,
   List,
   ListItem,

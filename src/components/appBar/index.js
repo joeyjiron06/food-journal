@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   AppBar,
   Toolbar,
-  Button,
   IconButton,
   Icon,
   Drawer,
@@ -32,8 +31,6 @@ class MyAppBar extends Component {
   }
 
   render() {
-    const user = firebase.user || {};
-
     return (
       <AppBar position="static">
         <Toolbar>

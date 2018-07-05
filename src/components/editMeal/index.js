@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
 import {
-  AppBar,
-  Toolbar,
   Button,
-  IconButton,
-  Icon,
-  Grid,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
   Dialog,
   DialogContent,
   DialogActions,
@@ -30,8 +21,10 @@ class EditMeal extends Component {
 
   componentWillMount() {
     // copy the passed in meal for editing, or create a new one
-    this.state.meal = { ...this.props.meal };
-    this.state.isEditing = !!this.props.meal;
+    this.setState({
+      meal: { ...this.props.meal },
+      isEditing: !!this.props.meal
+    });
   }
 
   handleTitleChanged = event => {
@@ -63,7 +56,7 @@ class EditMeal extends Component {
   };
 
   render() {
-    const { onConfirm, onCancel, onRemove } = this.props;
+    const { onConfirm, onCancel } = this.props;
     const { meal, isEditing, showRemoveConfirmDialog } = this.state;
     const addButtonEnabled = !!meal.type && !!meal.title;
     return (

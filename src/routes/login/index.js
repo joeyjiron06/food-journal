@@ -40,6 +40,7 @@ class Login extends Component {
           <img
             className="login-page-background-image"
             src="img/loginpage1.jpg"
+            alt="login page"
           />
           <div className="login-page-background-overlay" />
         </div>

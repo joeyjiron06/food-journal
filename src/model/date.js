@@ -24,7 +24,7 @@ export function dateRangeOfToday() {
 function getMonday(fromDate) {
   fromDate = new Date(fromDate);
   const day = fromDate.getDay();
-  const diff = fromDate.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  const diff = fromDate.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
   return new Date(fromDate.setDate(diff));
 }
 

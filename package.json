@@ -1,5 +1,6 @@
 {
   "name": "food-journal",
+  "homepage": "https://joeyjiron06.github.io/food-journal",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
