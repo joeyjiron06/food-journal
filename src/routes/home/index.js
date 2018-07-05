@@ -16,7 +16,7 @@ import {
   Modal
 } from '@material-ui/core';
 import EditMeal from '../../components/editMeal';
-import { addMeal, fetchMeals } from '../../model/meal';
+import { addMeal, removeMeal, fetchMeals } from '../../model/meal';
 
 class Home extends Component {
   state = {
@@ -58,18 +58,31 @@ class Home extends Component {
   };
 
   handleCloseModal = () => {
-    this.setState({ showAddModal: false });
+    this.setState({ showAddModal: false, editMeal: null });
+  };
+
+  handleMealClicked = meal => {
+    this.setState({
+      showAddModal: true,
+      editMeal: meal
+    });
   };
 
   handleMealAdded = meal => {
+    meal.id = meal.id || Date.now();
     const prevMeals = this.state.meals || [];
     const meals = [...prevMeals, meal];
     this.setState({ meals, showAddModal: false });
     addMeal(meal);
   };
+  handleRemoveMeal = meal => {
+    const meals = this.state.meals.filter(m => m.id !== meal.id);
+    this.setState({ meals, showAddModal: false, editMeal: null });
+    removeMeal(meal);
+  };
 
   render() {
-    const { meals, showAddModal } = this.state;
+    const { meals, showAddModal, editMeal } = this.state;
 
     return (
       <div className="home-page">
@@ -79,25 +92,32 @@ class Home extends Component {
           </Typography>
 
           <List>
-            {meals ? (
+            {meals && meals.length ? (
               meals.map(meal => (
-                <ListItem key={meal.id}>
+                <ListItem
+                  key={meal.id}
+                  onClick={() => {
+                    this.handleMealClicked(meal);
+                  }}
+                >
                   <ListItemText primary={meal.title} secondary={meal.type} />
                 </ListItem>
               ))
             ) : (
-              <div>
+              <Typography>
                 You haven't added any meals today. Add some meals by clicking on
                 the button below.
-              </div>
+              </Typography>
             )}
           </List>
         </div>
 
         <Modal open={showAddModal}>
           <EditMeal
+            meal={editMeal}
             onConfirm={this.handleMealAdded}
             onCancel={this.handleCloseModal}
+            onRemove={this.handleRemoveMeal}
           />
         </Modal>
 

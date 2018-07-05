@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   DialogTitle,
+  DialogContentText,
   TextField,
   FormControl,
   FormHelperText,
@@ -43,15 +44,27 @@ class EditMeal extends Component {
     const meal = { ...this.state.meal, type };
     this.setState({ meal });
   };
-  handleQuantityChanged = event => {
-    const quantity = event.target.value;
-    const meal = { ...this.state.meal, quantity };
-    this.setState({ meal });
+  handleOnRemoveClicked = () => {
+    this.setState({
+      showRemoveConfirmDialog: true
+    });
+  };
+
+  handleCancelRemove = () => {
+    this.setState({
+      showRemoveConfirmDialog: false
+    });
+  };
+  handleConfirmRemove = () => {
+    this.setState({
+      showRemoveConfirmDialog: false
+    });
+    this.props.onRemove(this.props.meal);
   };
 
   render() {
-    const { onConfirm, onCancel } = this.props;
-    const { meal, isEditing } = this.state;
+    const { onConfirm, onCancel, onRemove } = this.props;
+    const { meal, isEditing, showRemoveConfirmDialog } = this.state;
     const addButtonEnabled = !!meal.type && !!meal.title;
     return (
       <Dialog open={true}>
@@ -67,6 +80,20 @@ class EditMeal extends Component {
               helperText="required"
             />
           </div>
+
+          {isEditing ? (
+            <Button
+              style={{
+                position: 'absolute',
+                top: 20,
+                right: 20
+              }}
+              color="secondary"
+              onClick={this.handleOnRemoveClicked}
+            >
+              Remove
+            </Button>
+          ) : null}
 
           <form className="edit-meal-type-form" autoComplete="off">
             <FormControl
@@ -90,17 +117,6 @@ class EditMeal extends Component {
             </FormControl>
           </form>
 
-          <TextField
-            label="Quantity"
-            value={meal.quantity || ''}
-            onChange={this.handleQuantityChanged}
-            helperText="optional"
-            margin="normal"
-            style={{
-              maxWidth: 80
-            }}
-          />
-
           <DialogActions>
             <Button color="primary" onClick={onCancel}>
               Cancel
@@ -116,6 +132,25 @@ class EditMeal extends Component {
             </Button>
           </DialogActions>
         </DialogContent>
+
+        {showRemoveConfirmDialog ? (
+          <Dialog open={true}>
+            <DialogTitle>{`Remove ${meal.title}?`}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to delete {meal.title}?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleCancelRemove} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={this.handleConfirmRemove} color="secondary">
+                Remove
+              </Button>
+            </DialogActions>
+          </Dialog>
+        ) : null}
       </Dialog>
     );
   }

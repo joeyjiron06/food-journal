@@ -6,6 +6,13 @@ export function addMeal(meal) {
     .push({ ...meal, date: firebase.database.ServerValue.TIMESTAMP });
 }
 
+export function removeMeal(meal) {
+  firebase.user.db
+    .child('meals')
+    .child(meal.id)
+    .remove();
+}
+
 export function fetchMeals(startTime, endTime) {
   return firebase.user.db
     .child('meals')
