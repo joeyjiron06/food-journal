@@ -5,32 +5,34 @@ import LoginPage from './routes/login';
 import HomePage from './routes/home';
 import StatisticsPage from './routes/statistics';
 import SettingsPage from './routes/settings';
+import PrivacyPolicy from './routes/privacy-policy';
+import TermsOfService from './routes/terms-of-service';
 import AppBar from './components/appBar';
 import * as firebase from 'firebase';
 
 const theme = createMuiTheme({});
 
-class AuthenticatedRoute extends Component {
-  render() {
-    if (!firebase.user) {
-      return (
-        <Redirect
-          to={{
-            pathname: '/',
-            state: { from: this.props.location }
-          }}
-        />
-      );
-    }
+const AppBarRoute = props => (
+  <div>
+    <AppBar />
+    <Route {...props} />
+  </div>
+);
 
+const AuthenticatedRoute = props => {
+  if (!firebase.user) {
     return (
-      <div>
-        <AppBar />
-        <Route {...this.props} />
-      </div>
+      <Redirect
+        to={{
+          pathname: '/',
+          state: { from: props.location }
+        }}
+      />
     );
   }
-}
+
+  return <AppBarRoute {...props} />;
+};
 
 class App extends Component {
   state = {};
@@ -52,6 +54,16 @@ class App extends Component {
         <BrowserRouter basename={process.env.PUBLIC_URL}>
           <Switch>
             <Route exact path="/" component={LoginPage} />
+            <AppBarRoute
+              exact
+              path="/privacy-policy"
+              component={PrivacyPolicy}
+            />
+            <AppBarRoute
+              exact
+              path="/terms-of-service"
+              component={TermsOfService}
+            />
             <AuthenticatedRoute path="/home" component={HomePage} />
             <AuthenticatedRoute path="/statistics" component={StatisticsPage} />
             <AuthenticatedRoute path="/settings" component={SettingsPage} />
