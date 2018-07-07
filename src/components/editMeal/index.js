@@ -19,7 +19,7 @@ import './index.css';
 class EditMeal extends Component {
   state = {};
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // copy the passed in meal for editing, or create a new one
     this.setState({
       meal: { ...this.props.meal },

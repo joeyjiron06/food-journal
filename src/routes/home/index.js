@@ -18,7 +18,7 @@ class Home extends Component {
     showAddModal: false,
     meals: null
   };
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.mounted = true;
     fetchMeals(dateRangeOfToday())
       .then(meals => {
@@ -38,7 +38,7 @@ class Home extends Component {
       });
   }
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
     this.mounted = true;
   }
 

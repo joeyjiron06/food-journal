@@ -125,7 +125,7 @@ class StatisticsPage extends Component {
     this.setState({ value });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.handleTabClicked(null, 0);
   }
 

@@ -33,7 +33,7 @@ const AuthenticatedRoute = props => {
 class App extends Component {
   state = {};
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     initializeApp({
       apiKey: 'AIzaSyASrQ26OQZNaY9NKmEtOL1O8Uw_SdlAcNg',
       authDomain: 'food-journal-6eb44.firebaseapp.com',

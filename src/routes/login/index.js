@@ -4,7 +4,7 @@ import './index.css';
 import { auth, database } from 'firebase';
 
 class Login extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       isReturningUser: JSON.parse(localStorage.getItem('isReturningUser'))
     });
@@ -29,7 +29,7 @@ class Login extends Component {
     });
   }
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
     this.unsubscribeAuthStateChanged();
   }
 
