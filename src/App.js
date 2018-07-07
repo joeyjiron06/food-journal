@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LoginPage from './routes/login';
 import HomePage from './routes/home';
@@ -47,7 +52,7 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <Router basename={process.env.PUBLIC_URL}>
           <Switch>
             <Route exact path="/" component={LoginPage} />
             <AuthenticatedRoute path="/home" component={HomePage} />
@@ -56,7 +61,7 @@ class App extends Component {
             {/* no match just redirect to login page */}
             <Route component={LoginPage} />
           </Switch>
-        </BrowserRouter>
+        </Router>
       </MuiThemeProvider>
     );
   }
