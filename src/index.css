@@ -15,8 +15,3 @@ input:focus {
 div {
   box-sizing: border-box;
 }
-
-.legal-page {
-  padding: 40px;
-  max-width: 800px;
-}

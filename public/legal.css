@@ -1,0 +1,30 @@
+* {
+  font-family: Roboto, sans-serif;
+  color: #1f1f1f;
+}
+
+.page {
+  max-width: 800px;
+  padding: 40px;
+}
+
+p,
+li {
+  color: #5e5e5e;
+  line-height: 1.6em;
+  font-weight: 100;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+h3 {
+  color: #585858;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: 0.08em;
+}

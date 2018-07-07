@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import firebase from 'firebase';
 import './index.css';
 
@@ -31,12 +30,21 @@ class SettingsPage extends Component {
         </Typography>
 
         <div className="settings-page-link-container">
-          <Link className="settings-page-link" to="/privacy-policy">
+          <a
+            className="settings-page-link"
+            href={`${window.location.origin +
+              (process.env.baseurl || '')}/privacy-policy.html`}
+          >
             Privacy Policy
-          </Link>
-          <Link className="settings-page-link" to="/terms-of-service">
+          </a>
+
+          <a
+            className="settings-page-link"
+            href={`${window.location.origin +
+              (process.env.baseurl || '')}/terms-of-service.html`}
+          >
             Terms of Service
-          </Link>
+          </a>
         </div>
 
         <Button variant="raised" color="secondary" onClick={this.handleSignout}>
