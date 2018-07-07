@@ -33,7 +33,7 @@ class SettingsPage extends Component {
           <a
             className="settings-page-link"
             href={`${window.location.origin +
-              (process.env.baseurl || '')}/privacy-policy.html`}
+              (process.env.PUBLIC_URL || '')}/privacy-policy.html`}
           >
             Privacy Policy
           </a>
@@ -41,7 +41,7 @@ class SettingsPage extends Component {
           <a
             className="settings-page-link"
             href={`${window.location.origin +
-              (process.env.baseurl || '')}/terms-of-service.html`}
+              (process.env.PUBLIC_URL || '')}/terms-of-service.html`}
           >
             Terms of Service
           </a>
