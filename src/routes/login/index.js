@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, CircularProgress } from '@material-ui/core';
 import './index.css';
-import * as firebase from 'firebase';
+import { auth, database } from 'firebase';
 
 class Login extends Component {
   componentWillMount() {
@@ -9,26 +9,24 @@ class Login extends Component {
       isReturningUser: JSON.parse(localStorage.getItem('isReturningUser'))
     });
 
-    this.unsubscribeAuthStateChanged = firebase
-      .auth()
-      .onAuthStateChanged(user => {
-        if (!user) {
-          return;
-        }
+    this.unsubscribeAuthStateChanged = auth().onAuthStateChanged(user => {
+      if (!user) {
+        return;
+      }
 
-        firebase.user = user;
-        firebase.user.db = firebase.database().ref(user.uid);
-        localStorage.setItem('user', JSON.stringify(user));
+      auth().user = user;
+      database().user = database().ref(user.uid);
+      localStorage.setItem('user', JSON.stringify(user));
 
-        const pathname =
-          (this.props.location &&
-            this.props.location.state &&
-            this.props.location.state.from &&
-            this.props.location.state.from.pathname) ||
-          '/home';
+      const pathname =
+        (this.props.location &&
+          this.props.location.state &&
+          this.props.location.state.from &&
+          this.props.location.state.from.pathname) ||
+        '/home';
 
-        this.props.history.replace(pathname);
-      });
+      this.props.history.replace(pathname);
+    });
   }
 
   componentWillUnmount() {
@@ -37,9 +35,7 @@ class Login extends Component {
 
   async login() {
     localStorage.setItem('isReturningUser', true);
-    firebase
-      .auth()
-      .signInWithRedirect(new firebase.auth.FacebookAuthProvider());
+    auth().signInWithRedirect(new auth.FacebookAuthProvider());
   }
 
   render() {

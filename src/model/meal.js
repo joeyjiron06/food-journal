@@ -1,21 +1,21 @@
-import firebase from 'firebase';
+import { database } from 'firebase';
 
 export function addMeal(meal) {
-  firebase.user.db
-    .child('meals')
-    .push({ ...meal, date: firebase.database.ServerValue.TIMESTAMP });
+  database()
+    .user.child('meals')
+    .push({ ...meal, date: database.ServerValue.TIMESTAMP });
 }
 
 export function removeMeal(meal) {
-  firebase.user.db
-    .child('meals')
+  database()
+    .user.child('meals')
     .child(meal.id)
     .remove();
 }
 
 export function fetchMeals({ start, end }) {
-  return firebase.user.db
-    .child('meals')
+  return database()
+    .user.child('meals')
     .orderByChild('date')
     .startAt(start)
     .endAt(end)

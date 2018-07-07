@@ -13,7 +13,7 @@ import {
   Button,
   Typography
 } from '@material-ui/core';
-import * as firebase from 'firebase';
+import { auth } from 'firebase';
 import { withRouter } from 'react-router';
 
 class MyAppBar extends Component {
@@ -55,11 +55,11 @@ class MyAppBar extends Component {
           }}
         >
           <div tabIndex={0} role="button" onClick={() => {}}>
-            {firebase.user ? (
+            {auth().user ? (
               <List component="nav">
                 <ListItem dense button>
-                  <Avatar alt="Remy Sharp" src={firebase.user.photoURL} />
-                  <ListItemText primary={firebase.user.displayName} />
+                  <Avatar alt="Remy Sharp" src={auth().user.photoURL} />
+                  <ListItemText primary={auth().user.displayName} />
                 </ListItem>
 
                 <ListItem

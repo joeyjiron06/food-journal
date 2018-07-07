@@ -3,24 +3,15 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LoginPage from './routes/login';
 import HomePage from './routes/home';
-import StatisticsPage from './routes/statistics';
 import SettingsPage from './routes/settings';
-import PrivacyPolicy from './routes/privacy-policy';
-import TermsOfService from './routes/terms-of-service';
+import StatisticsPage from './routes/statistics';
 import AppBar from './components/appBar';
-import * as firebase from 'firebase';
+import { auth, initializeApp } from 'firebase';
 
 const theme = createMuiTheme({});
 
-const AppBarRoute = props => (
-  <div>
-    <AppBar />
-    <Route {...props} />
-  </div>
-);
-
 const AuthenticatedRoute = props => {
-  if (!firebase.user) {
+  if (!auth().user) {
     return (
       <Redirect
         to={{
@@ -31,14 +22,19 @@ const AuthenticatedRoute = props => {
     );
   }
 
-  return <AppBarRoute {...props} />;
+  return (
+    <div>
+      <AppBar />
+      <Route {...props} />
+    </div>
+  );
 };
 
 class App extends Component {
   state = {};
 
   componentWillMount() {
-    firebase.initializeApp({
+    initializeApp({
       apiKey: 'AIzaSyASrQ26OQZNaY9NKmEtOL1O8Uw_SdlAcNg',
       authDomain: 'food-journal-6eb44.firebaseapp.com',
       databaseURL: 'https://food-journal-6eb44.firebaseio.com',
@@ -54,16 +50,6 @@ class App extends Component {
         <BrowserRouter basename={process.env.PUBLIC_URL}>
           <Switch>
             <Route exact path="/" component={LoginPage} />
-            <AppBarRoute
-              exact
-              path="/privacy-policy"
-              component={PrivacyPolicy}
-            />
-            <AppBarRoute
-              exact
-              path="/terms-of-service"
-              component={TermsOfService}
-            />
             <AuthenticatedRoute path="/home" component={HomePage} />
             <AuthenticatedRoute path="/statistics" component={StatisticsPage} />
             <AuthenticatedRoute path="/settings" component={SettingsPage} />
