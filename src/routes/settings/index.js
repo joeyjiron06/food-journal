@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Typography } from '@material-ui/core';
-import firebase from 'firebase';
+import { auth } from 'firebase';
 import './index.css';
 
 class SettingsPage extends Component {
@@ -10,8 +10,7 @@ class SettingsPage extends Component {
   };
 
   handleSignout() {
-    firebase
-      .auth()
+    auth()
       .signOut()
       .then(() => {
         localStorage.clear();
