@@ -21,7 +21,6 @@ const isLocalhost = Boolean(
 export default function register() {
   // if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
   // TODO change me back
-  debugger;
   if ('serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location);

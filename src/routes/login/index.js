@@ -6,11 +6,14 @@ import { auth, database } from 'firebase';
 class Login extends Component {
   UNSAFE_componentWillMount() {
     this.setState({
-      isReturningUser: JSON.parse(localStorage.getItem('isReturningUser'))
+      isLoading: JSON.parse(localStorage.getItem('isReturningUser'))
     });
 
     this.unsubscribeAuthStateChanged = auth().onAuthStateChanged(user => {
       if (!user) {
+        this.setState({
+          isLoading: false
+        });
         return;
       }
 
@@ -39,7 +42,7 @@ class Login extends Component {
   }
 
   render() {
-    const { isReturningUser } = this.state;
+    const { isLoading } = this.state;
 
     return (
       <div className="login-page">
@@ -55,15 +58,11 @@ class Login extends Component {
         <div className="login-page-content">
           <div className="login-page-title">Food Journal</div>
           <p className="login-page-subtitle">keeping track of what you eat</p>
-          <Button
-            variant="contained"
-            onClick={this.login}
-            disabled={!!isReturningUser}
-          >
+          <Button variant="contained" onClick={this.login} disabled={isLoading}>
             Login with facebook
           </Button>
 
-          {isReturningUser ? <CircularProgress color="secondary" /> : null}
+          {isLoading ? <CircularProgress color="secondary" /> : null}
         </div>
       </div>
     );
