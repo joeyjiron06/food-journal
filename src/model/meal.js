@@ -13,7 +13,7 @@ export function removeMeal(meal) {
     .remove();
 }
 
-export function fetchMeals({ start, end }) {
+export function fetchMeals({ start, end, ascending = true }) {
   return database()
     .user.child('meals')
     .orderByChild('date')
@@ -28,6 +28,11 @@ export function fetchMeals({ start, end }) {
           id: mealSnapshot.key
         });
       });
+
+      if (!ascending) {
+        return meals.reverse();
+      }
+
       return meals;
     });
 }

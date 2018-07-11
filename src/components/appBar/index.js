@@ -77,6 +77,18 @@ class MyAppBar extends Component {
                 <ListItem
                   button
                   onClick={() => {
+                    this.navigateTo('/history');
+                  }}
+                >
+                  <ListItemIcon>
+                    <Icon>history</Icon>
+                  </ListItemIcon>
+                  <ListItemText primary="History" />
+                </ListItem>
+
+                <ListItem
+                  button
+                  onClick={() => {
                     this.navigateTo('/statistics');
                   }}
                 >
