@@ -6,6 +6,13 @@ export function addMeal(meal) {
     .push({ ...meal, date: database.ServerValue.TIMESTAMP });
 }
 
+export function updateMeal(meal) {
+  database()
+    .user.child('meals')
+    .child(meal.id)
+    .update(meal);
+}
+
 export function removeMeal(meal) {
   database()
     .user.child('meals')

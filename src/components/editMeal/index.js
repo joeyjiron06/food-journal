@@ -14,6 +14,7 @@ import {
   Select,
   MenuItem
 } from '@material-ui/core';
+import { updateMeal, addMeal, removeMeal } from '../../model/meal';
 import './index.css';
 
 class EditMeal extends Component {
@@ -37,6 +38,19 @@ class EditMeal extends Component {
     const meal = { ...this.state.meal, type };
     this.setState({ meal });
   };
+
+  handleConfirm = () => {
+    const { meal, isEditing } = this.state;
+
+    if (isEditing) {
+      updateMeal(meal);
+    } else {
+      addMeal(meal);
+    }
+
+    this.props.onConfirm(meal);
+  };
+
   handleOnRemoveClicked = () => {
     this.setState({
       showRemoveConfirmDialog: true
@@ -52,11 +66,12 @@ class EditMeal extends Component {
     this.setState({
       showRemoveConfirmDialog: false
     });
+    removeMeal(this.state.meal);
     this.props.onRemove(this.props.meal);
   };
 
   render() {
-    const { onConfirm, onCancel } = this.props;
+    const { onCancel } = this.props;
     const { meal, isEditing, showRemoveConfirmDialog } = this.state;
     const addButtonEnabled = !!meal.type && !!meal.title;
     return (
@@ -116,9 +131,7 @@ class EditMeal extends Component {
             </Button>
             <Button
               color="primary"
-              onClick={() => {
-                onConfirm(meal);
-              }}
+              onClick={this.handleConfirm}
               disabled={!addButtonEnabled}
             >
               {isEditing ? 'Confirm' : 'Add'}

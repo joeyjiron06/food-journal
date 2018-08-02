@@ -7,19 +7,24 @@ import {
   List,
   ListItem,
   ListItemText,
-  Modal
+  Modal,
+  CircularProgress
 } from '@material-ui/core';
 import EditMeal from '../../components/editMeal';
-import { addMeal, removeMeal, fetchMeals } from '../../model/meal';
+import { fetchMeals } from '../../model/meal';
 import { dateRangeOfToday } from '../../model/date';
 
 class Home extends Component {
   state = {
     showAddModal: false,
+    isFetching: true,
     meals: null
   };
   UNSAFE_componentWillMount() {
     this.mounted = true;
+
+    this.setState({ isFetching: true, isError: false });
+
     fetchMeals(dateRangeOfToday())
       .then(meals => {
         if (!this.mounted) {
@@ -27,13 +32,19 @@ class Home extends Component {
         }
         console.log('got meals', meals);
         this.setState({
-          meals
+          meals,
+          isFetching: false
         });
       })
       .catch(error => {
         if (!this.mounted) {
           return;
         }
+
+        this.setState({
+          isFetching: false,
+          isError: true
+        });
         console.error('error fetching meals', error);
       });
   }
@@ -57,21 +68,31 @@ class Home extends Component {
     });
   };
 
-  handleMealAdded = meal => {
-    meal.id = meal.id || Date.now();
+  handleMealConfirmed = meal => {
     const prevMeals = this.state.meals || [];
-    const meals = [...prevMeals, meal];
+    const meals = prevMeals.map(m => {
+      // update with new data
+      if (m.id === meal.id) {
+        return meal;
+      }
+
+      return m;
+    });
+
+    if (!meal.id) {
+      meal.id = Date.now(); //temp id
+      meals.push(meal);
+    }
+
     this.setState({ meals, showAddModal: false });
-    addMeal(meal);
   };
   handleRemoveMeal = meal => {
     const meals = this.state.meals.filter(m => m.id !== meal.id);
     this.setState({ meals, showAddModal: false, editMeal: null });
-    removeMeal(meal);
   };
 
   render() {
-    const { meals, showAddModal, editMeal } = this.state;
+    const { meals, showAddModal, editMeal, isFetching } = this.state;
 
     return (
       <div className="home-page">
@@ -80,31 +101,35 @@ class Home extends Component {
             Today
           </Typography>
 
-          <List>
-            {meals && meals.length ? (
-              meals.map(meal => (
-                <ListItem
-                  key={meal.id}
-                  onClick={() => {
-                    this.handleMealClicked(meal);
-                  }}
-                >
-                  <ListItemText primary={meal.title} secondary={meal.type} />
-                </ListItem>
-              ))
-            ) : (
-              <Typography>
-                You haven't added any meals today. Add some meals by clicking on
-                the button below.
-              </Typography>
-            )}
-          </List>
+          {isFetching ? (
+            <CircularProgress color="secondary" />
+          ) : (
+            <List>
+              {meals && meals.length ? (
+                meals.map(meal => (
+                  <ListItem
+                    key={meal.id}
+                    onClick={() => {
+                      this.handleMealClicked(meal);
+                    }}
+                  >
+                    <ListItemText primary={meal.title} secondary={meal.type} />
+                  </ListItem>
+                ))
+              ) : (
+                <Typography>
+                  You haven't added any meals today. Add some meals by clicking
+                  on the button below.
+                </Typography>
+              )}
+            </List>
+          )}
         </div>
 
         <Modal open={showAddModal}>
           <EditMeal
             meal={editMeal}
-            onConfirm={this.handleMealAdded}
+            onConfirm={this.handleMealConfirmed}
             onCancel={this.handleCloseModal}
             onRemove={this.handleRemoveMeal}
           />
