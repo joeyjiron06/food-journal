@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Button, Typography, Menu, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/lab/Slider';
-import { auth, database } from 'firebase';
+import { database } from 'firebase';
+import { logout } from '../../api/foodJournal';
 import debounce from '../../utils/debouncer';
 import './index.css';
 
@@ -42,16 +43,13 @@ class SettingsPage extends Component {
     this.goalRef.child('mealType').set(value);
   };
 
-  handleSignout() {
-    auth()
-      .signOut()
-      .then(() => {
-        localStorage.clear();
-        window.location.href = window.location.href; // refresh
-      })
-      .catch(error => {
-        console.error('error signing out', error);
-      });
+  async handleSignout() {
+    try {
+      await logout();
+    } catch (e) {
+      localStorage.clear();
+      window.location.href = window.location.href; // refresh
+    }
   }
 
   UNSAFE_componentWillMount() {
@@ -95,8 +93,8 @@ class SettingsPage extends Component {
     const { classes } = this.props;
 
     return (
-      <div className="settings-page">
-        <Typography variant="display1" gutterBottom>
+      <div className='settings-page'>
+        <Typography variant='display1' gutterBottom>
           Settings
         </Typography>
 
@@ -113,7 +111,7 @@ class SettingsPage extends Component {
               onChange={this.handleGoalPercentageChanged}
             />
             <Typography
-              variant="subheading"
+              variant='subheading'
               className={classes.goalPercentage}
             >{`${Math.round(goalPercentage)}%`}</Typography>
 
@@ -128,17 +126,17 @@ class SettingsPage extends Component {
               open={Boolean(mealTypeButtonRef)}
               onClose={this.handleMealTypeMenuClose}
             >
-              <MenuItem value="junk" onClick={this.handleMealTypeSelected}>
+              <MenuItem value='junk' onClick={this.handleMealTypeSelected}>
                 Junk Food
               </MenuItem>
-              <MenuItem value="meat" onClick={this.handleMealTypeSelected}>
+              <MenuItem value='meat' onClick={this.handleMealTypeSelected}>
                 Meat
               </MenuItem>
-              <MenuItem value="vegan" onClick={this.handleMealTypeSelected}>
+              <MenuItem value='vegan' onClick={this.handleMealTypeSelected}>
                 Vegan
               </MenuItem>
               <MenuItem
-                value="vegetarian"
+                value='vegetarian'
                 onClick={this.handleMealTypeSelected}
               >
                 Vegetarian
@@ -147,9 +145,9 @@ class SettingsPage extends Component {
           </div>
         </div>
 
-        <div className="settings-page-link-container">
+        <div className='settings-page-link-container'>
           <a
-            className="settings-page-link"
+            className='settings-page-link'
             href={`${window.location.origin +
               (process.env.PUBLIC_URL || '')}/privacy-policy.html`}
           >
@@ -157,7 +155,7 @@ class SettingsPage extends Component {
           </a>
 
           <a
-            className="settings-page-link"
+            className='settings-page-link'
             href={`${window.location.origin +
               (process.env.PUBLIC_URL || '')}/terms-of-service.html`}
           >
@@ -165,7 +163,7 @@ class SettingsPage extends Component {
           </a>
         </div>
 
-        <Button variant="raised" color="secondary" onClick={this.handleSignout}>
+        <Button variant='raised' color='secondary' onClick={this.handleSignout}>
           Sign out
         </Button>
       </div>

@@ -95,14 +95,14 @@ class Home extends Component {
     const { meals, showAddModal, editMeal, isFetching } = this.state;
 
     return (
-      <div className="home-page">
-        <div className="home-page-content">
-          <Typography variant="display1" gutterBottom>
+      <div className='home-page'>
+        <div className='home-page-content'>
+          <Typography variant='display1' gutterBottom>
             Today
           </Typography>
 
           {isFetching ? (
-            <CircularProgress color="secondary" />
+            <CircularProgress color='secondary' />
           ) : (
             <List>
               {meals && meals.length ? (
@@ -135,8 +135,8 @@ class Home extends Component {
           />
         </Modal>
 
-        <div className="home-page-add-button-container">
-          <Button variant="extendedFab" onClick={this.handleAddMealClicked}>
+        <div className='home-page-add-button-container'>
+          <Button variant='extendedFab' onClick={this.handleAddMealClicked}>
             <Icon style={{ marginRight: 10 }}>add</Icon>
             Add Meal
           </Button>

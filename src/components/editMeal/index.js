@@ -14,7 +14,7 @@ import {
   Select,
   MenuItem
 } from '@material-ui/core';
-import { updateMeal, addMeal, removeMeal } from '../../model/meal';
+import { updateMeal, addMeal, removeMeal } from '../../api/foodJournal';
 import './index.css';
 
 class EditMeal extends Component {
@@ -39,13 +39,13 @@ class EditMeal extends Component {
     this.setState({ meal });
   };
 
-  handleConfirm = () => {
+  handleConfirm = async () => {
     const { meal, isEditing } = this.state;
 
     if (isEditing) {
-      updateMeal(meal);
+      await updateMeal(meal);
     } else {
-      addMeal(meal);
+      await addMeal(meal);
     }
 
     this.props.onConfirm(meal);
@@ -81,11 +81,11 @@ class EditMeal extends Component {
         <DialogContent>
           <div>
             <TextField
-              label="Name of meal"
+              label='Name of meal'
               value={meal.title || ''}
               onChange={this.handleTitleChanged}
-              margin="normal"
-              helperText="required"
+              margin='normal'
+              helperText='required'
             />
           </div>
 
@@ -96,24 +96,24 @@ class EditMeal extends Component {
                 top: 20,
                 right: 20
               }}
-              color="secondary"
+              color='secondary'
               onClick={this.handleOnRemoveClicked}
             >
               Remove
             </Button>
           ) : null}
 
-          <form className="edit-meal-type-form" autoComplete="off">
+          <form className='edit-meal-type-form' autoComplete='off'>
             <FormControl
               style={{
                 minWidth: 120
               }}
             >
-              <InputLabel htmlFor="edit-meal-type">Meal Type</InputLabel>
+              <InputLabel htmlFor='edit-meal-type'>Meal Type</InputLabel>
               <Select
                 value={meal.type || ''}
                 onChange={this.handleMealTypeChanged}
-                input={<Input name="Meal Type" id="edit-meal-type" />}
+                input={<Input name='Meal Type' id='edit-meal-type' />}
               >
                 <MenuItem value={'junk'}>Junk food</MenuItem>
                 <MenuItem value={'meat'}>Meat</MenuItem>
@@ -126,11 +126,11 @@ class EditMeal extends Component {
           </form>
 
           <DialogActions>
-            <Button color="primary" onClick={onCancel}>
+            <Button color='primary' onClick={onCancel}>
               Cancel
             </Button>
             <Button
-              color="primary"
+              color='primary'
               onClick={this.handleConfirm}
               disabled={!addButtonEnabled}
             >
@@ -148,10 +148,10 @@ class EditMeal extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.handleCancelRemove} color="primary">
+              <Button onClick={this.handleCancelRemove} color='primary'>
                 Cancel
               </Button>
-              <Button onClick={this.handleConfirmRemove} color="secondary">
+              <Button onClick={this.handleConfirmRemove} color='secondary'>
                 Remove
               </Button>
             </DialogActions>

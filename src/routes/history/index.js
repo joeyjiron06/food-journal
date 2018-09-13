@@ -106,21 +106,21 @@ class HistoryPage extends Component {
     const showModal = !!editMeal;
 
     return (
-      <div className="history-page">
-        <Typography variant="display1" gutterBottom>
+      <div className='history-page'>
+        <Typography variant='display1' gutterBottom>
           Meal History
         </Typography>
 
         <div>
           {isLoading ? (
-            <CircularProgress color="secondary" />
+            <CircularProgress color='secondary' />
           ) : (
             <List subheader={<li />}>
               {sections && sections.length
                 ? sections.map(section => (
                     <li key={`${section.date}`}>
                       <ul>
-                        <ListSubheader className="section-header">
+                        <ListSubheader className='section-header'>
                           {section.date.toLocaleDateString()}
                         </ListSubheader>
                         <Divider />

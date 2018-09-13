@@ -1,24 +1,19 @@
 import React, { Component } from 'react';
 import { Button, CircularProgress } from '@material-ui/core';
 import './index.css';
-import { auth, database } from 'firebase';
+// import { auth, database } from 'firebase';
+import { onAuthStateChanged, login, updateStats } from '../../api/foodJournal';
 
 class Login extends Component {
-  UNSAFE_componentWillMount() {
+  async UNSAFE_componentWillMount() {
     this.setState({
       isLoading: JSON.parse(localStorage.getItem('isReturningUser'))
     });
 
-    this.unsubscribeAuthStateChanged = auth().onAuthStateChanged(user => {
-      if (!user) {
-        this.setState({
-          isLoading: false
-        });
-        return;
-      }
+    try {
+      const user = await onAuthStateChanged();
+      await updateStats();
 
-      auth().user = user;
-      database().user = database().ref(user.uid);
       localStorage.setItem('user', JSON.stringify(user));
 
       const pathname =
@@ -26,43 +21,43 @@ class Login extends Component {
           this.props.location.state &&
           this.props.location.state.from &&
           this.props.location.state.from.pathname) ||
-        '/home';
+        '/feeds';
 
       this.props.history.replace(pathname);
-    });
-  }
-
-  UNSAFE_componentWillUnmount() {
-    this.unsubscribeAuthStateChanged();
+    } catch (e) {
+      this.setState({
+        isLoading: false
+      });
+    }
   }
 
   async login() {
     localStorage.setItem('isReturningUser', true);
-    auth().signInWithRedirect(new auth.FacebookAuthProvider());
+    login();
   }
 
   render() {
     const { isLoading } = this.state;
 
     return (
-      <div className="login-page">
-        <div className="login-page-background-container">
+      <div className='login-page'>
+        <div className='login-page-background-container'>
           <img
-            className="login-page-background-image"
-            src="img/loginpage1.jpg"
-            alt="login page"
+            className='login-page-background-image'
+            src='img/loginpage1.jpg'
+            alt='login page'
           />
-          <div className="login-page-background-overlay" />
+          <div className='login-page-background-overlay' />
         </div>
 
-        <div className="login-page-content">
-          <div className="login-page-title">Food Journal</div>
-          <p className="login-page-subtitle">keeping track of what you eat</p>
-          <Button variant="contained" onClick={this.login} disabled={isLoading}>
+        <div className='login-page-content'>
+          <div className='login-page-title'>Food Journal</div>
+          <p className='login-page-subtitle'>keeping track of what you eat</p>
+          <Button variant='contained' onClick={this.login} disabled={isLoading}>
             Login with facebook
           </Button>
 
-          {isLoading ? <CircularProgress color="secondary" /> : null}
+          {isLoading ? <CircularProgress color='secondary' /> : null}
         </div>
       </div>
     );

@@ -34,11 +34,11 @@ class MyAppBar extends Component {
 
   render() {
     return (
-      <AppBar position="static">
+      <AppBar position='static'>
         <Toolbar>
           <IconButton
-            color="inherit"
-            aria-label="Menu"
+            color='inherit'
+            aria-label='Menu'
             onClick={() => {
               this.openMenu();
             }}
@@ -54,11 +54,11 @@ class MyAppBar extends Component {
             this.closeMenu();
           }}
         >
-          <div tabIndex={0} role="button" onClick={() => {}}>
+          <div tabIndex={0} role='button' onClick={() => {}}>
             {auth().user ? (
-              <List component="nav">
+              <List component='nav'>
                 <ListItem dense button>
-                  <Avatar alt="Remy Sharp" src={auth().user.photoURL} />
+                  <Avatar alt='Remy Sharp' src={auth().user.photoUrl} />
                   <ListItemText primary={auth().user.displayName} />
                 </ListItem>
 
@@ -71,7 +71,7 @@ class MyAppBar extends Component {
                   <ListItemIcon>
                     <Icon>today</Icon>
                   </ListItemIcon>
-                  <ListItemText primary="Today" />
+                  <ListItemText primary='Today' />
                 </ListItem>
 
                 <ListItem
@@ -83,7 +83,7 @@ class MyAppBar extends Component {
                   <ListItemIcon>
                     <Icon>history</Icon>
                   </ListItemIcon>
-                  <ListItemText primary="History" />
+                  <ListItemText primary='History' />
                 </ListItem>
 
                 <ListItem
@@ -95,7 +95,7 @@ class MyAppBar extends Component {
                   <ListItemIcon>
                     <Icon>bar_chart</Icon>
                   </ListItemIcon>
-                  <ListItemText primary="Statistics" />
+                  <ListItemText primary='Statistics' />
                 </ListItem>
 
                 <ListItem
@@ -107,7 +107,7 @@ class MyAppBar extends Component {
                   <ListItemIcon>
                     <Icon>settings</Icon>
                   </ListItemIcon>
-                  <ListItemText primary="Settings" />
+                  <ListItemText primary='Settings' />
                 </ListItem>
               </List>
             ) : (
@@ -121,8 +121,8 @@ class MyAppBar extends Component {
                   onClick={() => {
                     this.navigateTo('/');
                   }}
-                  variant="raised"
-                  color="primary"
+                  variant='raised'
+                  color='primary'
                 >
                   Login
                 </Button>

@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
   Redirect,
   Switch
 } from 'react-router-dom';
 import LoginPage from './login';
 import HomePage from './home';
+import FeedsPage from './feeds';
 import SettingsPage from './settings';
 import StatisticsPage from './statistics';
 import HistoryPage from './history';
@@ -34,13 +35,14 @@ const AuthenticatedRoute = props => {
 };
 
 export default () => (
-  <Router basename={process.env.PUBLIC_URL}>
+  <Router>
     <Switch>
-      <Route exact path="/" component={LoginPage} />
-      <AuthenticatedRoute path="/home" component={HomePage} />
-      <AuthenticatedRoute path="/statistics" component={StatisticsPage} />
-      <AuthenticatedRoute path="/history" component={HistoryPage} />
-      <AuthenticatedRoute path="/settings" component={SettingsPage} />
+      <Route exact path='/' component={LoginPage} />
+      <AuthenticatedRoute path='/feeds' component={FeedsPage} />
+      <AuthenticatedRoute path='/home' component={HomePage} />
+      <AuthenticatedRoute path='/statistics' component={StatisticsPage} />
+      <AuthenticatedRoute path='/history' component={HistoryPage} />
+      <AuthenticatedRoute path='/settings' component={SettingsPage} />
       {/* no match just redirect to login page */}
       <Route component={LoginPage} />
     </Switch>

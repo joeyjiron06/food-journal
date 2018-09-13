@@ -38,11 +38,11 @@ const calculateStats = meals => {
 };
 
 const Statistic = ({ title, value }) => (
-  <div className="stats-page-stat">
-    <Typography className="state-page-state-title">{title}</Typography>
-    <div className="stats-page-percentage-container">
+  <div className='stats-page-stat'>
+    <Typography className='state-page-state-title'>{title}</Typography>
+    <div className='stats-page-percentage-container'>
       <div
-        className="stats-page-percentage-bar"
+        className='stats-page-percentage-bar'
         style={{
           width: (value || 0) + '%'
         }}
@@ -189,30 +189,30 @@ class StatisticsPage extends Component {
     const { value, goal, numMealsToReachGoal } = this.state;
 
     return (
-      <div className="stats-page">
-        <Typography variant="display1" gutterBottom>
+      <div className='stats-page'>
+        <Typography variant='display1' gutterBottom>
           Statistics
         </Typography>
 
         <Tabs
           value={value}
           onChange={this.handleTabClicked}
-          indicatorColor="primary"
-          textColor="primary"
+          indicatorColor='primary'
+          textColor='primary'
           scrollable
-          scrollButtons="auto"
+          scrollButtons='auto'
         >
-          <Tab label="Today" />
-          <Tab label="Week" />
-          <Tab label="Month" />
-          <Tab label="Year" />
+          <Tab label='Today' />
+          <Tab label='Week' />
+          <Tab label='Month' />
+          <Tab label='Year' />
         </Tabs>
 
-        <div className="stats-page-chart">
-          <Statistic title="Junk Food" value={stats.junkFood} />
-          <Statistic title="Meat" value={stats.meat} />
-          <Statistic title="Vegan" value={stats.vegan} />
-          <Statistic title="Vegetarian" value={stats.vegetarian} />
+        <div className='stats-page-chart'>
+          <Statistic title='Junk Food' value={stats.junkFood} />
+          <Statistic title='Meat' value={stats.meat} />
+          <Statistic title='Vegan' value={stats.vegan} />
+          <Statistic title='Vegetarian' value={stats.vegetarian} />
         </div>
 
         {goal && numMealsToReachGoal !== undefined ? (
