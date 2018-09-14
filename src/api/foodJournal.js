@@ -1,4 +1,5 @@
 import { database, auth } from 'firebase';
+import { dateRangeOfWeek } from '../model/date';
 
 // USER API
 export function getUser() {
@@ -33,32 +34,69 @@ export async function removeMeal(meal) {
 
 export async function updateStats() {
   const userId = auth().user.id;
-  const meals = await fetchMeals({ userId });
+  const meals = await fetchMeals({ userId, ascending: false });
 
-  const stats = meals.reduce(
-    (stats, meal) => {
-      if (meal.type === 'meat') stats.meat++;
-      if (meal.type === 'vegetarian') stats.vegetarian++;
-      if (meal.type === 'vegan') stats.vegan++;
-      if (meal.type === 'junk') stats.junkFood++;
-      return stats;
-    },
-    {
-      meat: 0,
-      vegetarian: 0,
-      vegan: 0,
-      junkFood: 0
+  const stats = {
+    meat: 0,
+    vegetarian: 0,
+    vegan: 0,
+    junkFood: 0,
+    dateOfAllVeganDay: 0,
+    junkFoodCountThisWeek: 0,
+    meatCountThisWeek: 0,
+    totalMeals: meals.length,
+    lastMeal: meals[0]
+  };
+
+  const weekDateRange = dateRangeOfWeek();
+  console.log(
+    'range',
+    new Date(weekDateRange.start),
+    new Date(weekDateRange.end)
+  );
+  meals.forEach(meal => {
+    if (meal.type === 'meat') stats.meat++;
+    if (meal.type === 'vegetarian') stats.vegetarian++;
+    if (meal.type === 'vegan') stats.vegan++;
+    if (meal.type === 'junk') stats.junkFood++;
+
+    // this week
+    if (meal.date >= weekDateRange.start && meal.date <= weekDateRange.end) {
+      if (meal.type === 'meat') stats.meatCountThisWeek++;
+      if (meal.type === 'junk') stats.junkFoodCountThisWeek++;
     }
+  });
+
+  stats['vegan'] = (stats['vegan'] * 100) / meals.length;
+  stats['meat'] = (stats['meat'] * 100) / meals.length;
+  stats['vegetarian'] = (stats['vegetarian'] * 100) / meals.length;
+  stats['junkFood'] = (stats['junkFood'] * 100) / meals.length;
+
+  const days = meals.reduce((days, meal) => {
+    const date = new Date(meal.date);
+    let day = days[days.length - 1];
+    const mealDay = date.getDate();
+    const currentDay = day && day.date.getDate();
+
+    if (mealDay !== currentDay) {
+      days.push({
+        date: date,
+        meals: []
+      });
+      day = days[days.length - 1];
+    }
+
+    day.meals.push(meal);
+
+    return days;
+  }, []);
+
+  const allVeganDay = days.find(day =>
+    day.meals.every(meal => meal.type === 'vegan')
   );
 
-  for (let key in stats) {
-    stats[key] = (stats[key] * 100) / meals.length;
-  }
-
-  stats.totalMeals = meals.length;
-
-  if (meals.length > 0) {
-    stats.lastMeal = meals[meals.length - 1];
+  if (allVeganDay) {
+    stats.dateOfAllVeganDay = allVeganDay.date.getTime();
   }
 
   await database()

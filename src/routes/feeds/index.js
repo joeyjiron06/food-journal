@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
-import { CircularProgress, TextField } from '@material-ui/core';
+import {
+  CircularProgress,
+  TextField,
+  MenuItem,
+  Icon,
+  IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  FormHelperText
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { getUser, fetchUsersFeed } from '../../api/foodJournal';
-import Avatar from '../../components/avatar';
+import { fetchUsersFeed, addMeal } from '../../api/foodJournal';
 import UserCard from './userCard';
 
 class FeedsPage extends Component {
   state = {
     isLoading: true,
     users: null,
-    error: false
+    error: false,
+    mealTitle: null
   };
 
   async UNSAFE_componentWillMount() {
@@ -31,15 +41,82 @@ class FeedsPage extends Component {
     }
   }
 
+  handleMealTypeSelected = e => {
+    const { value } = e.target;
+    this.setState({
+      meal: {
+        ...this.state.meal,
+        type: value
+      }
+    });
+  };
+
+  handleMealTextChanged = e => {
+    const value = e.target.value;
+    const newMeal = {
+      ...this.state.meal,
+      title: value
+    };
+
+    this.setState({
+      meal: newMeal
+    });
+  };
+
+  handleCreateMeal = async () => {
+    const { meal } = this.state;
+    await addMeal(meal);
+    await this.fetchFeeds();
+    this.setState({ meal: null, users: this.state.users });
+  };
+
   render() {
     const { classes } = this.props;
-    const { isLoading, users, error } = this.state;
+    const { isLoading, users, error, meal } = this.state;
 
     return (
       <div className={classes.root}>
         <div className={classes.userContainer}>
-          <Avatar user={getUser()} className={classes.userAvatar} />
-          <TextField fullWidth={true} placeholder='What did you have to eat?' />
+          <TextField
+            className={classes.textField}
+            fullWidth={true}
+            placeholder='What did you have to eat?'
+            value={(meal && meal.title) || ''}
+            onChange={this.handleMealTextChanged}
+          />
+
+          {meal &&
+            meal.title && (
+              <div className={classes.mealActionContainer}>
+                <FormControl required>
+                  <InputLabel htmlFor='mealtype-required'>Meal Type</InputLabel>
+
+                  <Select
+                    className={classes.mealTypeSelect}
+                    value={(meal && meal.type) || ''}
+                    onChange={this.handleMealTypeSelected}
+                    name='mealtype'
+                    inputProps={{
+                      id: 'mealtype-required'
+                    }}
+                  >
+                    <MenuItem value='vegan'>Vegan</MenuItem>
+                    <MenuItem value='vegetarian'>Vegetarian</MenuItem>
+                    <MenuItem value='meat'>Meat</MenuItem>
+                    <MenuItem value='junk'>Junk Food</MenuItem>
+                  </Select>
+                  <FormHelperText>Required</FormHelperText>
+                </FormControl>
+
+                <IconButton
+                  color='primary'
+                  disabled={!meal || !meal.type || !meal.title}
+                  onClick={this.handleCreateMeal}
+                >
+                  <Icon>send</Icon>
+                </IconButton>
+              </div>
+            )}
         </div>
 
         {(() => {
@@ -73,15 +150,32 @@ const styles = theme => ({
   },
   userContainer: {
     display: 'flex',
-    padding: 20,
-    maxWidth: 600
+    alignItems: 'center',
+    padding: '20px 0',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      padding: 20
+    }
   },
   userAvatar: {
     marginRight: 20
   },
   userCard: {
-    marginBottom: 10,
-    maxWidth: 600
+    marginBottom: 10
+  },
+  mealTypeButton: {
+    minWidth: 128
+  },
+  textField: {
+    marginRight: 10
+  },
+  mealActionContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  mealTypeSelect: {
+    minWidth: 128
   }
 });
 

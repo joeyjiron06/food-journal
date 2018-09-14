@@ -34,6 +34,30 @@ const UserCard = ({ user, classes, className, ...other }) => (
           classes={classes}
         />
       </div>
+
+      <div className={classes.extraStats}>
+        {user.stats.dateOfAllVeganDay && (
+          <Typography gutterBottom>
+            <b>{moment(user.stats.dateOfAllVeganDay).fromNow()} </b>
+            since last all vegan day
+          </Typography>
+        )}
+
+        <Typography gutterBottom>
+          <b>{user.stats.junkFoodCountThisWeek || 0} </b>
+          junk food meals eaten this week
+        </Typography>
+
+        <Typography gutterBottom>
+          <b>{user.stats.meatCountThisWeek || 0} </b>
+          meat meals eaten this week
+        </Typography>
+
+        <Typography className={classes.totalMeals}>
+          <b>{user.stats.totalMeals || 0} </b>
+          meals
+        </Typography>
+      </div>
     </div>
   </div>
 );
@@ -93,6 +117,12 @@ const styles = theme => ({
   },
   statPercentage: {
     minWidth: 40,
+    textAlign: 'right'
+  },
+  extraStats: {
+    opacity: 0.7
+  },
+  totalMeals: {
     textAlign: 'right'
   }
 });

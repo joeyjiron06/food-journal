@@ -25,6 +25,7 @@ class Login extends Component {
 
       this.props.history.replace(pathname);
     } catch (e) {
+      console.error(e);
       this.setState({
         isLoading: false
       });

@@ -25,7 +25,11 @@ function getMonday(fromDate) {
   fromDate = new Date(fromDate);
   const day = fromDate.getDay();
   const diff = fromDate.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-  return new Date(fromDate.setDate(diff));
+  const monday = new Date(fromDate.setDate(diff));
+  monday.setHours(0);
+  monday.setMinutes(0);
+  monday.setSeconds(0);
+  return monday;
 }
 
 export function dateRangeOfWeek() {
