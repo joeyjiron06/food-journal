@@ -6,11 +6,9 @@ import {
   Switch
 } from 'react-router-dom';
 import LoginPage from './login';
-import HomePage from './home';
 import FeedsPage from './feeds';
 import SettingsPage from './settings';
-import StatisticsPage from './statistics';
-import HistoryPage from './history';
+import UserPage from './user';
 import AppBar from '../components/appBar';
 import { auth } from 'firebase';
 
@@ -39,10 +37,8 @@ export default () => (
     <Switch>
       <Route exact path='/' component={LoginPage} />
       <AuthenticatedRoute path='/feeds' component={FeedsPage} />
-      <AuthenticatedRoute path='/home' component={HomePage} />
-      <AuthenticatedRoute path='/statistics' component={StatisticsPage} />
-      <AuthenticatedRoute path='/history' component={HistoryPage} />
       <AuthenticatedRoute path='/settings' component={SettingsPage} />
+      <AuthenticatedRoute path='/user/:id' component={UserPage} />
       {/* no match just redirect to login page */}
       <Route component={LoginPage} />
     </Switch>

@@ -45,15 +45,10 @@ export async function updateStats() {
     junkFoodCountThisWeek: 0,
     meatCountThisWeek: 0,
     totalMeals: meals.length,
-    lastMeal: meals[0]
+    lastMeal: meals[0] || null
   };
 
   const weekDateRange = dateRangeOfWeek();
-  console.log(
-    'range',
-    new Date(weekDateRange.start),
-    new Date(weekDateRange.end)
-  );
   meals.forEach(meal => {
     if (meal.type === 'meat') stats.meat++;
     if (meal.type === 'vegetarian') stats.vegetarian++;
@@ -67,29 +62,15 @@ export async function updateStats() {
     }
   });
 
-  stats['vegan'] = (stats['vegan'] * 100) / meals.length;
-  stats['meat'] = (stats['meat'] * 100) / meals.length;
-  stats['vegetarian'] = (stats['vegetarian'] * 100) / meals.length;
-  stats['junkFood'] = (stats['junkFood'] * 100) / meals.length;
+  // prevent divide by zero errors
+  if (meals.length) {
+    stats['vegan'] = (stats['vegan'] * 100) / meals.length;
+    stats['meat'] = (stats['meat'] * 100) / meals.length;
+    stats['vegetarian'] = (stats['vegetarian'] * 100) / meals.length;
+    stats['junkFood'] = (stats['junkFood'] * 100) / meals.length;
+  }
 
-  const days = meals.reduce((days, meal) => {
-    const date = new Date(meal.date);
-    let day = days[days.length - 1];
-    const mealDay = date.getDate();
-    const currentDay = day && day.date.getDate();
-
-    if (mealDay !== currentDay) {
-      days.push({
-        date: date,
-        meals: []
-      });
-      day = days[days.length - 1];
-    }
-
-    day.meals.push(meal);
-
-    return days;
-  }, []);
+  const days = arrangeByDays(meals);
 
   const allVeganDay = days.find(day =>
     day.meals.every(meal => meal.type === 'vegan')
@@ -136,11 +117,44 @@ export async function login() {
   await auth().signInWithRedirect(new auth.FacebookAuthProvider());
 }
 
-export async function logout() {
-  await auth().log();
+export async function signOut() {
+  await auth().signOut();
+}
+
+export async function deleteAccount() {
+  await database()
+    .ref(auth().user.id)
+    .set(null);
 }
 
 // OTHER APIs
+
+export function arrangeByDays(meals) {
+  return meals.reduce((days, meal) => {
+    const date = new Date(meal.date);
+    let day = days[days.length - 1];
+    const mealDay = date.getDate();
+    const currentDay = day && day.date.getDate();
+
+    if (mealDay !== currentDay) {
+      days.push({
+        date: date,
+        meals: []
+      });
+      day = days[days.length - 1];
+    }
+
+    day.meals.push(meal);
+
+    return days;
+  }, []);
+}
+
+export async function fetchHistory(userId) {
+  const meals = await fetchMeals({ userId, ascending: false });
+  return arrangeByDays(meals);
+}
+
 export async function fetchMeals({ userId, ascending = true }) {
   const snapshot = await database()
     .ref(userId)

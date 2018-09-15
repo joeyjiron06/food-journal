@@ -8,24 +8,36 @@ import {
   DialogContentText,
   TextField,
   FormControl,
-  FormHelperText,
   InputLabel,
   Input,
   Select,
-  MenuItem
+  MenuItem,
+  withMobileDialog,
+  IconButton,
+  Icon
 } from '@material-ui/core';
-import { updateMeal, addMeal, removeMeal } from '../../api/foodJournal';
-import './index.css';
+import { withStyles } from '@material-ui/core/styles';
+import { updateMeal, removeMeal } from '../../api/foodJournal';
+import moment from 'moment';
 
 class EditMeal extends Component {
-  state = {};
+  state = {
+    now: moment(new Date()).valueOf(),
+    yesterday: moment(new Date())
+      .subtract(1, 'day')
+      .valueOf(),
+    twoDaysAgo: moment(new Date())
+      .subtract(2, 'day')
+      .valueOf()
+  };
 
   UNSAFE_componentWillMount() {
     // copy the passed in meal for editing, or create a new one
     this.setState({
-      meal: { ...this.props.meal },
-      isEditing: !!this.props.meal
+      meal: { ...this.props.meal }
     });
+
+    console.log('state', this.state);
   }
 
   handleTitleChanged = event => {
@@ -38,16 +50,16 @@ class EditMeal extends Component {
     const meal = { ...this.state.meal, type };
     this.setState({ meal });
   };
+  handleMealDateChanged = event => {
+    const date = event.target.value;
+    const meal = { ...this.state.meal, date };
+    this.setState({ meal });
+  };
 
   handleConfirm = async () => {
-    const { meal, isEditing } = this.state;
+    const { meal } = this.state;
 
-    if (isEditing) {
-      await updateMeal(meal);
-    } else {
-      await addMeal(meal);
-    }
-
+    await updateMeal(meal);
     this.props.onConfirm(meal);
   };
 
@@ -71,73 +83,89 @@ class EditMeal extends Component {
   };
 
   render() {
-    const { onCancel } = this.props;
-    const { meal, isEditing, showRemoveConfirmDialog } = this.state;
+    const { onCancel, fullScreen, classes } = this.props;
+    const {
+      meal,
+      showRemoveConfirmDialog,
+      now,
+      yesterday,
+      twoDaysAgo
+    } = this.state;
     const addButtonEnabled = !!meal.type && !!meal.title;
+
     return (
-      <Dialog open={true}>
-        <DialogTitle>{isEditing ? 'Edit Meal' : 'Add Meal'}</DialogTitle>
+      <Dialog open={true} fullScreen={fullScreen}>
+        <DialogTitle>Edit Meal</DialogTitle>
 
         <DialogContent>
-          <div>
-            <TextField
-              label='Name of meal'
-              value={meal.title || ''}
-              onChange={this.handleTitleChanged}
-              margin='normal'
-              helperText='required'
-            />
-          </div>
+          <DialogContentText>
+            Edit your meal below. All fields are required.
+          </DialogContentText>
 
-          {isEditing ? (
-            <Button
-              style={{
-                position: 'absolute',
-                top: 20,
-                right: 20
-              }}
-              color='secondary'
-              onClick={this.handleOnRemoveClicked}
+          <TextField
+            fullWidth={true}
+            label='Name of meal'
+            value={meal.title || ''}
+            onChange={this.handleTitleChanged}
+            margin='normal'
+          />
+
+          <IconButton
+            style={{
+              position: 'absolute',
+              top: 20,
+              right: 20
+            }}
+            color='secondary'
+            onClick={this.handleOnRemoveClicked}
+          >
+            <Icon>delete</Icon>
+          </IconButton>
+
+          <FormControl className={classes.form}>
+            <InputLabel htmlFor='edit-meal-type'>Meal Type</InputLabel>
+            <Select
+              value={meal.type || ''}
+              onChange={this.handleMealTypeChanged}
+              input={<Input name='Meal Type' id='edit-meal-type' />}
             >
-              Remove
-            </Button>
-          ) : null}
+              <MenuItem value={'junk'}>Junk food</MenuItem>
+              <MenuItem value={'meat'}>Meat</MenuItem>
+              <MenuItem value={'vegan'}>Vegan</MenuItem>
+              <MenuItem value={'vegetarian'}>Vegetarian</MenuItem>
+            </Select>
+          </FormControl>
 
-          <form className='edit-meal-type-form' autoComplete='off'>
-            <FormControl
-              style={{
-                minWidth: 120
-              }}
+          <FormControl className={classes.form}>
+            <InputLabel htmlFor='edit-meal-date'>Date</InputLabel>
+            <Select
+              value={meal.date || ''}
+              onChange={this.handleMealDateChanged}
+              input={<Input name='Date' id='edit-meal-date' />}
             >
-              <InputLabel htmlFor='edit-meal-type'>Meal Type</InputLabel>
-              <Select
-                value={meal.type || ''}
-                onChange={this.handleMealTypeChanged}
-                input={<Input name='Meal Type' id='edit-meal-type' />}
-              >
-                <MenuItem value={'junk'}>Junk food</MenuItem>
-                <MenuItem value={'meat'}>Meat</MenuItem>
-                <MenuItem value={'vegan'}>Vegan</MenuItem>
-                <MenuItem value={'vegetarian'}>Vegetarian</MenuItem>
-              </Select>
-
-              <FormHelperText>required</FormHelperText>
-            </FormControl>
-          </form>
-
-          <DialogActions>
-            <Button color='primary' onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button
-              color='primary'
-              onClick={this.handleConfirm}
-              disabled={!addButtonEnabled}
-            >
-              {isEditing ? 'Confirm' : 'Add'}
-            </Button>
-          </DialogActions>
+              <MenuItem value={now}>Today</MenuItem>
+              <MenuItem value={yesterday}>Yesterday</MenuItem>
+              <MenuItem value={twoDaysAgo}>2 days ago</MenuItem>
+              {/* TODO: other. allow user to type in some other date */}
+              <MenuItem value={this.props.meal.date}>
+                {new Date(this.props.meal.date).toLocaleDateString()}
+              </MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
+
+        <DialogActions>
+          <Button color='primary' onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button
+            color='primary'
+            onClick={this.handleConfirm}
+            disabled={!addButtonEnabled}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
 
         {showRemoveConfirmDialog ? (
           <Dialog open={true}>
@@ -162,4 +190,16 @@ class EditMeal extends Component {
   }
 }
 
-export default EditMeal;
+const styles = theme => ({
+  root: {},
+  form: {
+    display: 'inline-block',
+    marginRight: 20,
+    marginTop: 20,
+    minWidth: 120
+  }
+});
+
+export default withMobileDialog({ breakpoint: 'xs' })(
+  withStyles(styles)(EditMeal)
+);

@@ -1,11 +1,15 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router';
 
-const Avatar = ({ user, className, classes }) => (
+const Avatar = ({ user, className, history, classes }) => (
   <img
     className={`${classes.image} ${className || ''}`}
     src={user.photoUrl}
     alt='avatar'
+    onClick={() => {
+      history.push(`/user/${user.id}`);
+    }}
   />
 );
 
@@ -17,4 +21,4 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(Avatar);
+export default withRouter(withStyles(styles)(Avatar));

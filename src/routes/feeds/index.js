@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { fetchUsersFeed, addMeal } from '../../api/foodJournal';
-import UserCard from './userCard';
+import UserCard from '../../components/userCard';
 
 class FeedsPage extends Component {
   state = {
@@ -133,7 +133,12 @@ class FeedsPage extends Component {
           }
 
           return users.map(user => (
-            <UserCard key={user.id} user={user} className={classes.userCard} />
+            <UserCard
+              key={user.id}
+              user={user}
+              stats={user.stats}
+              className={classes.userCard}
+            />
           ));
         })()}
       </div>

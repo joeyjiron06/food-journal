@@ -18,3 +18,7 @@ input:focus {
 div {
   box-sizing: border-box;
 }
+
+ul {
+  list-style-type: none;
+}

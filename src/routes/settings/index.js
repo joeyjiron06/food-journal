@@ -1,153 +1,74 @@
 import React, { Component } from 'react';
-import { Button, Typography, Menu, MenuItem } from '@material-ui/core';
+import {
+  Button,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import Slider from '@material-ui/lab/Slider';
-import { database } from 'firebase';
-import { logout } from '../../api/foodJournal';
-import debounce from '../../utils/debouncer';
-import './index.css';
-
-const styles = {
-  goalContainer: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  goalPercentage: {
-    marginRight: 10
-  },
-  goalMealType: {
-    flexShrink: 0
-  }
-};
+import { signOut, deleteAccount } from '../../api/foodJournal';
 
 class SettingsPage extends Component {
   state = {
-    goalValue: 0,
-    mealTypeButtonRef: null
-  };
-
-  handleGoalPercentageChanged = (event, value) => {
-    this.setGoalPercentageDebouncer(value);
-    this.setState({ goalPercentage: value });
-  };
-  handleMealTypeClick = event => {
-    this.setState({ mealTypeButtonRef: event.target });
-  };
-  handleMealTypeMenuClose = () => {
-    this.setState({ mealTypeButtonRef: null });
-  };
-  handleMealTypeSelected = event => {
-    const value = event.target.getAttribute('value');
-    const title = event.target.textContent;
-    this.setState({ mealTypeButtonRef: null, goalMealType: title });
-    this.goalRef.child('mealType').set(value);
+    showDeleteAccountConfirmation: false
   };
 
   async handleSignout() {
     try {
-      await logout();
+      await signOut();
     } catch (e) {
+      console.error('error signing out', e);
+    } finally {
       localStorage.clear();
-      window.location.href = window.location.href; // refresh
+      window.location.reload(); // refresh the page
     }
   }
 
-  UNSAFE_componentWillMount() {
-    this.mounted = true;
-    this.goalRef = database().user.child('goal');
-    this.goalRef
-      .once('value')
-      .then(snapshot => {
-        if (!this.mounted) {
-          return;
-        }
-
-        const goal = snapshot.val();
-        if (goal) {
-          this.setState({
-            goalPercentage: goal.percentage,
-            goalMealType: goal.mealType
-          });
-        }
-      })
-      .catch(error => {
-        if (!this.mounted) {
-          return;
-        }
-        console.error('error fetching goal');
-      });
-
-    this.setGoalPercentageDebouncer = debounce(500, percentage => {
-      percentage = Math.round(percentage);
-      console.log('setting goal percentage to', percentage);
-      this.goalRef.child('percentage').set(percentage);
+  handleDeleteAccount = () => {
+    this.setState({
+      showDeleteAccountConfirmation: true
     });
-  }
-  UNSAFE_componentWillUnmount() {
-    this.mounted = false;
-    this.setGoalPercentageDebouncer.destroy();
-  }
+  };
+
+  handleCancelDeleteAccount = () => {
+    this.setState({
+      showDeleteAccountConfirmation: false
+    });
+  };
+
+  handleDeleteAccountConfirmed = async () => {
+    await deleteAccount();
+    await this.handleSignout();
+  };
 
   render() {
-    const { goalPercentage, goalMealType, mealTypeButtonRef } = this.state;
     const { classes } = this.props;
+    const { showDeleteAccountConfirmation } = this.state;
 
     return (
-      <div className='settings-page'>
+      <div className={classes.root}>
         <Typography variant='display1' gutterBottom>
           Settings
         </Typography>
 
-        <div>
-          <Typography>
-            What percentage of a specific kind of meal type would you like as
-            your goal?
-          </Typography>
+        <Typography gutterBottom>
+          Thank you for using Food Journal. If you find a bug click on the
+          github link below and submit an issue.
+        </Typography>
 
-          <div className={classes.goalContainer}>
-            <Slider
-              style={{ marginRight: 20 }}
-              value={goalPercentage || 0}
-              onChange={this.handleGoalPercentageChanged}
-            />
-            <Typography
-              variant='subheading'
-              className={classes.goalPercentage}
-            >{`${Math.round(goalPercentage)}%`}</Typography>
-
-            <Button
-              onClick={this.handleMealTypeClick}
-              className={classes.goalMealType}
-            >
-              {goalMealType ? goalMealType : 'Meal Type'}
-            </Button>
-            <Menu
-              anchorEl={mealTypeButtonRef}
-              open={Boolean(mealTypeButtonRef)}
-              onClose={this.handleMealTypeMenuClose}
-            >
-              <MenuItem value='junk' onClick={this.handleMealTypeSelected}>
-                Junk Food
-              </MenuItem>
-              <MenuItem value='meat' onClick={this.handleMealTypeSelected}>
-                Meat
-              </MenuItem>
-              <MenuItem value='vegan' onClick={this.handleMealTypeSelected}>
-                Vegan
-              </MenuItem>
-              <MenuItem
-                value='vegetarian'
-                onClick={this.handleMealTypeSelected}
-              >
-                Vegetarian
-              </MenuItem>
-            </Menu>
-          </div>
-        </div>
-
-        <div className='settings-page-link-container'>
+        <div className={classes.linkContainer}>
           <a
-            className='settings-page-link'
+            className={classes.link}
+            href={'https://github.com/joeyjiron06/food-journal'}
+          >
+            Github
+          </a>
+
+          <a
+            className={classes.link}
             href={`${window.location.origin +
               (process.env.PUBLIC_URL || '')}/privacy-policy.html`}
           >
@@ -155,7 +76,7 @@ class SettingsPage extends Component {
           </a>
 
           <a
-            className='settings-page-link'
+            className={classes.link}
             href={`${window.location.origin +
               (process.env.PUBLIC_URL || '')}/terms-of-service.html`}
           >
@@ -163,12 +84,67 @@ class SettingsPage extends Component {
           </a>
         </div>
 
-        <Button variant='raised' color='secondary' onClick={this.handleSignout}>
+        <Button
+          className={classes.button}
+          variant='raised'
+          color='secondary'
+          onClick={this.handleSignout}
+        >
           Sign out
         </Button>
+
+        <Button
+          variant='raised'
+          color='secondary'
+          className={classes.button}
+          onClick={this.handleDeleteAccount}
+        >
+          Delete Account
+        </Button>
+
+        {showDeleteAccountConfirmation && (
+          <Dialog open={true}>
+            <DialogTitle>Delete Account</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to delete your account? This action cannot
+                be undone.
+              </DialogContentText>
+            </DialogContent>
+
+            <DialogActions>
+              <Button onClick={this.handleCancelDeleteAccount}>Cancel</Button>
+              <Button
+                color='secondary'
+                onClick={this.handleDeleteAccountConfirmed}
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </div>
     );
   }
 }
+
+const styles = {
+  root: {
+    padding: '30px 20px'
+  },
+
+  link: {
+    color: '#3f51b5',
+    textDecoration: 'underline',
+    marginRight: 10
+  },
+
+  linkContainer: {
+    marginBottom: 20
+  },
+  button: {
+    marginRight: 20
+  }
+};
 
 export default withStyles(styles)(SettingsPage);
