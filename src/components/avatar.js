@@ -2,13 +2,17 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 
-const Avatar = ({ user, className, history, classes }) => (
+const Avatar = ({ user, className, history, classes, onClick }) => (
   <img
     className={`${classes.image} ${className || ''}`}
     src={user.photoUrl}
     alt='avatar'
     onClick={() => {
-      history.push(`/user/${user.id}`);
+      if (onClick) {
+        onClick();
+      } else {
+        history.push(`/user/${user.id}`);
+      }
     }}
   />
 );

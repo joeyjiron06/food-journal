@@ -1,3 +1,5 @@
+// TODO remove me and use momemnt instead
+
 export function dateRangeOfToday() {
   const now = new Date();
   const startOfToday = new Date(

@@ -17,7 +17,7 @@ import {
   Icon
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { updateMeal, removeMeal } from '../../api/foodJournal';
+import { updateMeal, removeMeal } from '../api/foodJournal';
 import moment from 'moment';
 
 class EditMeal extends Component {
