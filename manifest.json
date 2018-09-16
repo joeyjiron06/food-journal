@@ -1,15 +1,8 @@
 {
-  "short_name": "Food Journal",
   "name": "Food Journal",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    }
-  ],
+  "short_name": "Food Journal",
   "start_url": "/food-journal",
-  "display": "browser",
+  "display": "standalone",
   "theme_color": "#3f51b5",
   "background_color": "#ffffff"
 }
