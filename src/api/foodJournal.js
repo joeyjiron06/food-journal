@@ -86,6 +86,22 @@ export async function updateStats() {
     .set(stats);
 }
 
+function onAuthSuccess(authUser) {
+  const user = {
+    id: authUser.uid,
+    photoUrl: authUser.photoURL,
+    displayName: authUser.displayName
+  };
+
+  auth().user = user;
+  database().user = database().ref(user.id);
+  database()
+    .user.child('info')
+    .set(user);
+
+  return user;
+}
+
 export async function onAuthStateChanged() {
   const authUser = await new Promise((resolve, reject) => {
     const unsubscribe = auth().onAuthStateChanged(user => {
@@ -99,22 +115,13 @@ export async function onAuthStateChanged() {
     });
   });
 
-  const user = {
-    id: authUser.uid,
-    photoUrl: authUser.photoURL,
-    displayName: authUser.displayName
-  };
-  auth().user = user;
-  database().user = database().ref(user.id);
-  database()
-    .user.child('info')
-    .set(user);
-
-  return user;
+  return onAuthSuccess(authUser);
 }
 
 export async function login() {
-  await auth().signInWithRedirect(new auth.FacebookAuthProvider());
+  const result = await auth().signInWithPopup(new auth.FacebookAuthProvider());
+  const authUser = result.user;
+  return onAuthSuccess(authUser);
 }
 
 export async function signOut() {
