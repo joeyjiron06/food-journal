@@ -1,10 +1,10 @@
 {
   "runtime~main.js": "/food-journal/static/js/runtime~main.65a3ec36.js",
   "runtime~main.js.map": "/food-journal/static/js/runtime~main.65a3ec36.js.map",
-  "vendors.js": "/food-journal/static/js/vendors.10eb499b.chunk.js",
-  "vendors.js.map": "/food-journal/static/js/vendors.10eb499b.chunk.js.map",
-  "main.css": "/food-journal/static/css/main.939693f9.chunk.css",
-  "main.js": "/food-journal/static/js/main.71f85b88.chunk.js",
-  "main.js.map": "/food-journal/static/js/main.71f85b88.chunk.js.map",
+  "vendors.js": "/food-journal/static/js/vendors.bff9e426.chunk.js",
+  "vendors.js.map": "/food-journal/static/js/vendors.bff9e426.chunk.js.map",
+  "main.css": "/food-journal/static/css/main.a227405d.chunk.css",
+  "main.js": "/food-journal/static/js/main.05fa9700.chunk.js",
+  "main.js.map": "/food-journal/static/js/main.05fa9700.chunk.js.map",
   "index.html": "/food-journal/index.html"
 }
