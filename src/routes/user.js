@@ -16,9 +16,9 @@ import {
   fetchUser,
   fetchUserStats,
   getUser
-} from '../../api/foodJournal';
-import EditMeal from '../../components/editMeal';
-import UserCard from '../../components/userCard';
+} from '../api/foodJournal';
+import EditMeal from '../components/editMeal';
+import UserCard from '../components/userCard';
 import moment from 'moment';
 
 class UserPage extends Component {
@@ -43,7 +43,7 @@ class UserPage extends Component {
       const user = await fetchUser(userId);
       const stats = await fetchUserStats(userId);
       const days = await fetchHistory(userId);
-      console.log(days);
+
       this.setState({
         days,
         user,
@@ -205,7 +205,8 @@ const formatDay = date => {
 const styles = theme => ({
   root: {
     maxWidth: 600,
-    margin: '0 auto'
+    margin: '0 auto',
+    paddingTop: 20
   },
   mealListTitle: {
     padding: '20px 16px'

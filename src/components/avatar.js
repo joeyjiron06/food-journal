@@ -21,7 +21,8 @@ const styles = theme => ({
   image: {
     width: 40,
     height: 40,
-    borderRadius: '100%'
+    borderRadius: '100%',
+    flexShrink: 0
   }
 });
 

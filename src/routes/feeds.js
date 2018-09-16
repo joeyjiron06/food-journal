@@ -11,8 +11,8 @@ import {
   FormHelperText
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { fetchUsersFeed, addMeal } from '../../api/foodJournal';
-import UserCard from '../../components/userCard';
+import { fetchUsersFeed, addMeal } from '../api/foodJournal';
+import UserCard from '../components/userCard';
 
 class FeedsPage extends Component {
   state = {

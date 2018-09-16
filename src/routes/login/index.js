@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, CircularProgress } from '@material-ui/core';
 import './index.css';
-// import { auth, database } from 'firebase';
 import { onAuthStateChanged, login, updateStats } from '../../api/foodJournal';
 
 class Login extends Component {

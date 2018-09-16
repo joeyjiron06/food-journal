@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import { withRouter } from 'react-router';
 import Avatar from './avatar';
 import { getUser } from '../api/foodJournal';
@@ -7,7 +7,16 @@ import { getUser } from '../api/foodJournal';
 const AppBar = ({ history, classes }) => (
   <div className={classes.root}>
     <div className={classes.content}>
-      <Typography variant='title'>Food Journal</Typography>
+      <div
+        onClick={() => {
+          history.push('/feeds');
+        }}
+      >
+        <img className={classes.logo} src='img/logo.png' alt='logo' />
+        <div className={classes.divider} />
+        <img className={classes.logo} src='img/logo-text.png' alt='logo' />
+      </div>
+      {/* <Typography variant='title'>Food Journal</Typography> */}
 
       <Avatar
         user={getUser()}
@@ -23,7 +32,21 @@ const styles = theme => ({
   root: {
     background: 'white',
     padding: '10px 20px',
-    borderBottom: 'solid 1px rgba(0,0,0,0.1)'
+    borderBottom: 'solid 1px rgba(0,0,0,0.1)',
+    position: 'sticky',
+    top: 0,
+    zIndex: 100
+  },
+  logo: {
+    height: 28
+  },
+  divider: {
+    display: 'inline-block',
+    width: 1,
+    height: 30,
+    margin: '0 10px',
+    background: 'black',
+    opacity: 0.2
   },
   content: {
     maxWidth: 600,
