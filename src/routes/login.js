@@ -4,11 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { onAuthStateChanged, login, updateStats } from '../api/foodJournal';
 
 class Login extends Component {
-  async componentDidMount() {
-    this.setState({
-      isLoading: JSON.parse(localStorage.getItem('isReturningUser'))
-    });
+  state = {
+    isLoading: JSON.parse(localStorage.getItem('isReturningUser'))
+  };
 
+  async componentDidMount() {
     try {
       const user = await onAuthStateChanged();
       await this.onAuthSuccess(user);

@@ -20,6 +20,7 @@ const AppBar = ({ history, classes }) => (
       <Avatar
         user={getUser()}
         onClick={() => {
+          // TODO: show dropdown with profile, settings, signout
           history.push('/settings');
         }}
       />

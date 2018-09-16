@@ -5,19 +5,17 @@ import Routes from './routes';
 
 const theme = createMuiTheme({});
 
+initializeApp({
+  apiKey: 'AIzaSyASrQ26OQZNaY9NKmEtOL1O8Uw_SdlAcNg',
+  authDomain: 'food-journal-6eb44.firebaseapp.com',
+  databaseURL: 'https://food-journal-6eb44.firebaseio.com',
+  projectId: 'food-journal-6eb44',
+  storageBucket: '',
+  messagingSenderId: '1056680813971'
+});
+
 class App extends Component {
   state = {};
-
-  componentDidMount() {
-    initializeApp({
-      apiKey: 'AIzaSyASrQ26OQZNaY9NKmEtOL1O8Uw_SdlAcNg',
-      authDomain: 'food-journal-6eb44.firebaseapp.com',
-      databaseURL: 'https://food-journal-6eb44.firebaseio.com',
-      projectId: 'food-journal-6eb44',
-      storageBucket: '',
-      messagingSenderId: '1056680813971'
-    });
-  }
 
   render() {
     return (
