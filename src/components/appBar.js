@@ -16,7 +16,6 @@ const AppBar = ({ history, classes }) => (
         <div className={classes.divider} />
         <img className={classes.logo} src='img/logo-text.png' alt='logo' />
       </div>
-      {/* <Typography variant='title'>Food Journal</Typography> */}
 
       <Avatar
         user={getUser()}

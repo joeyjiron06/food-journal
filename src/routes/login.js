@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Button, CircularProgress } from '@material-ui/core';
-import './index.css';
-import { onAuthStateChanged, login, updateStats } from '../../api/foodJournal';
 import { withStyles } from '@material-ui/core/styles';
+import { onAuthStateChanged, login, updateStats } from '../api/foodJournal';
 
 class Login extends Component {
-  async UNSAFE_componentWillMount() {
+  async componentDidMount() {
     this.setState({
       isLoading: JSON.parse(localStorage.getItem('isReturningUser'))
     });
@@ -64,10 +63,14 @@ class Login extends Component {
         <div className={classes.content}>
           <div className={classes.title}>Food Journal</div>
           <p className={classes.subtitle}>keeping track of what you eat</p>
-          <Button variant='contained' onClick={this.login} disabled={isLoading}>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={this.login}
+            disabled={isLoading}
+          >
             Login with facebook
           </Button>
-
           {isLoading ? <CircularProgress color='secondary' /> : null}
         </div>
       </div>

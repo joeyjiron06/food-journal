@@ -31,13 +31,11 @@ class EditMeal extends Component {
       .valueOf()
   };
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     // copy the passed in meal for editing, or create a new one
     this.setState({
       meal: { ...this.props.meal }
     });
-
-    console.log('state', this.state);
   }
 
   handleTitleChanged = event => {

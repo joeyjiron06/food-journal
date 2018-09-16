@@ -8,7 +8,7 @@ const theme = createMuiTheme({});
 class App extends Component {
   state = {};
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     initializeApp({
       apiKey: 'AIzaSyASrQ26OQZNaY9NKmEtOL1O8Uw_SdlAcNg',
       authDomain: 'food-journal-6eb44.firebaseapp.com',

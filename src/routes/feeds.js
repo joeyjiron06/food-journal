@@ -22,7 +22,7 @@ class FeedsPage extends Component {
     mealTitle: null
   };
 
-  async UNSAFE_componentWillMount() {
+  async componentDidMount() {
     await this.fetchFeeds();
   }
 

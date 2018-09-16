@@ -1,5 +1,5 @@
 import { database, auth } from 'firebase';
-import { dateRangeOfWeek } from '../model/date';
+import moment from 'moment';
 
 // USER API
 export function getUser() {
@@ -48,7 +48,9 @@ export async function updateStats() {
     lastMeal: meals[0] || null
   };
 
-  const weekDateRange = dateRangeOfWeek();
+  const startOfWeek = moment().startOf('week');
+  const endOfWeek = moment().endOf('week');
+
   meals.forEach(meal => {
     if (meal.type === 'meat') stats.meat++;
     if (meal.type === 'vegetarian') stats.vegetarian++;
@@ -56,7 +58,7 @@ export async function updateStats() {
     if (meal.type === 'junk') stats.junkFood++;
 
     // this week
-    if (meal.date >= weekDateRange.start && meal.date <= weekDateRange.end) {
+    if (moment(meal.date).isBetween(startOfWeek, endOfWeek)) {
       if (meal.type === 'meat') stats.meatCountThisWeek++;
       if (meal.type === 'junk') stats.junkFoodCountThisWeek++;
     }
@@ -119,7 +121,9 @@ export async function onAuthStateChanged() {
 }
 
 export async function login() {
-  const result = await auth().signInWithPopup(new auth.FacebookAuthProvider());
+  const result = await auth().signInWithRedirect(
+    new auth.FacebookAuthProvider()
+  );
   const authUser = result.user;
   return onAuthSuccess(authUser);
 }
